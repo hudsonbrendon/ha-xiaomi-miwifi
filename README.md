@@ -11,7 +11,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
-Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local LuCI HTTP API. Mesh-aware: the gateway is the hub and each leaf node appears as a child device. Powered by [`python-xiaomi-miwifi`](https://github.com/hudsonbrendon/python-xiaomi-miwifi).
+Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local LuCI HTTP API. Mesh-aware: add each router as its own entry and the gateway auto-discovers and links its mesh peers. Powered by [`python-xiaomi-miwifi`](https://github.com/hudsonbrendon/python-xiaomi-miwifi).
 
 ## Features
 
@@ -24,7 +24,7 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 - 🛠️ Repairs: firmware-update-available and unsupported-router issues
 - 🔑 Reauthentication and reconfigure flows
 - ⚙️ Advanced options: consider-home debounce and MAC exclusion list
-- 🕸️ One child device per mesh leaf node (model + online + IP)
+- 🕸️ Per-router entries with automatic mesh discovery and `via_device` correlation
 - 🎚️ Selects: 2.4/5 GHz Wi-Fi channel and signal strength (transmit power)
 - 🛠️ Controls: 2.4/5 GHz radio switches, QoS switch, reboot button, run-speed-test button
 - 🌍 Country-code diagnostic sensor and a full ~45-model supported-router table (incl. RC06 and RD03)
@@ -70,8 +70,6 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 | DMZ | binary_sensor | DMZ enabled, diagnostic |
 | DDNS | binary_sensor | DDNS enabled, diagnostic |
 | IPv6 | binary_sensor | IPv6 enabled on WAN, diagnostic |
-| Mesh node online | binary_sensor | per leaf node connectivity |
-| Mesh node IP | sensor | per leaf node, diagnostic |
 | 2.4 GHz / 5 GHz channel | select | ⚠️ disruptive (restarts the radio) |
 | 2.4 GHz / 5 GHz signal strength | select | max/mid/min, ⚠️ disruptive |
 | 2.4 GHz / 5 GHz Wi-Fi | switch | ⚠️ disruptive |
