@@ -103,6 +103,14 @@ The integration fires bus events as devices come and go, and exposes matching de
 | `xiaomi_miwifi_device_disconnected` | A device disconnected | `mac` |
 | `xiaomi_miwifi_new_device` | A new device joined | `mac`, `name`, `ip` |
 
+## Multiple routers & mesh discovery
+
+Each router is added as its own config entry with its own full set of entities. To add a mesh, set up the gateway first: the integration reads its mesh topology and automatically surfaces every peer node as a discovery flow ready to add. Peers also show up on their own when they appear on the network via DHCP. Because discovery reuses the admin passwords already stored on your other entries, adding a peer usually needs no extra input.
+
+Discovered peers are linked under their gateway via `via_device`, so the device hierarchy in Home Assistant mirrors your physical mesh.
+
+> **Breaking change (0.7.0):** mesh nodes are no longer exposed as per-leaf child sensors under the gateway entry — each router is now its own entry. Entries are also keyed by router MAC instead of host; existing entries are migrated automatically on upgrade.
+
 ## System Health & Repairs
 
 - **System Health** (Settings → System → Repairs → System information) shows router count, reachability, firmware version, connected devices, and mesh nodes.

@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented here.
 
+## [0.7.0]
+
+### Added
+
+- **Per-router entries**: each router (the gateway and every mesh node) is now its own config entry with its own full set of entities, instead of a single entry exposing child sensors for the leaves.
+- **Mesh correlation**: discovered mesh peers are linked under their gateway via `via_device`, so the device hierarchy mirrors the physical mesh.
+- **Mesh auto-discovery**: when a gateway is set up, its mesh peers are automatically surfaced as integration-discovery flows ready to add.
+- **DHCP auto-discovery**: Xiaomi/Redmi routers appearing on the network via DHCP are offered for setup automatically.
+- **Password reuse**: discovery flows try the admin passwords already stored on existing entries first, so adding mesh peers usually needs no extra input.
+
+### Changed
+
+- Reconfigure now keys the entry on the router MAC (the same way the user and discovery flows do) and refuses to be pointed at a different physical router.
+
+### Breaking changes
+
+- **Per-leaf child sensors removed.** Mesh nodes are no longer exposed as child sensors under the gateway entry; each router is added as its own entry instead.
+- **Entries are now keyed by router MAC** (previously by host). Existing entries are migrated automatically on upgrade.
+
 ## [0.6.1]
 
 ### Added
