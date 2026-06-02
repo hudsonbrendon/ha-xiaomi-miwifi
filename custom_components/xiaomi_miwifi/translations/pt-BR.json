@@ -37,7 +37,11 @@
   "options": {
     "step": {
       "init": {
-        "data": { "scan_interval": "Intervalo de atualização (segundos)" }
+        "data": {
+          "scan_interval": "Intervalo de atualização (segundos)",
+          "consider_home": "Intervalo considerar-em-casa (segundos)",
+          "excluded_macs": "Endereços MAC ignorados (separados por vírgula)"
+        }
       }
     }
   },

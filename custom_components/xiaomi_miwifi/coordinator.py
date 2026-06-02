@@ -53,6 +53,7 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
         self.last_seen: dict[str, object] = {}
         self._known_online: set[str] = set()
         self._known_macs: set[str] = set()
+        self._mac_info: dict[str, dict] = {}
 
     async def async_load_channels(self) -> None:
         """Fetch the available channel lists once (they don't change)."""
@@ -76,6 +77,7 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
             if mac in self.excluded_macs:
                 continue
             payload = {"mac": c.mac, "name": c.name, "ip": c.ip}
+            self._mac_info[mac] = {"mac": c.mac, "name": c.name, "ip": c.ip}
             if mac not in self._known_macs:
                 self._known_macs.add(mac)
                 self.hass.bus.async_fire(EVENT_NEW_DEVICE, payload)
@@ -84,7 +86,10 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
             if c.online:
                 self.last_seen[mac] = now
         for mac in self._known_online - online_now:
-            self.hass.bus.async_fire(EVENT_DEVICE_DISCONNECTED, {"mac": mac})
+            self.hass.bus.async_fire(
+                EVENT_DEVICE_DISCONNECTED,
+                self._mac_info.get(mac, {"mac": mac}),
+            )
         self._known_online = online_now
 
     async def _async_update_data(self) -> MiWiFiStatus:

@@ -95,11 +95,14 @@ async def test_coordinator_fires_disconnect_event(hass):
     client = AsyncMock()
     client.async_get_status.return_value = make_status(True)
     client.async_get_clients.side_effect = [
-        [_client_dev("AA:BB:CC:DD:EE:01")],   # online
+        [_client_dev("AA:BB:CC:DD:EE:01", name="Living Room TV")],  # online
         [],                                    # gone
     ]
     coordinator = XiaomiMiWiFiCoordinator(hass, client, 30)
     await coordinator.async_refresh()
     await coordinator.async_refresh()
     await hass.async_block_till_done()
-    assert any(d["mac"] == "AA:BB:CC:DD:EE:01" for d in seen)
+    match = [d for d in seen if d["mac"] == "AA:BB:CC:DD:EE:01"]
+    assert match, "disconnect event not fired"
+    assert match[0]["name"] == "Living Room TV"
+    assert match[0]["ip"] == "192.168.31.9"

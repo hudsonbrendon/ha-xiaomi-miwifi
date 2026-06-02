@@ -37,7 +37,11 @@
   "options": {
     "step": {
       "init": {
-        "data": { "scan_interval": "Update interval (seconds)" }
+        "data": {
+          "scan_interval": "Update interval (seconds)",
+          "consider_home": "Consider-home interval (seconds)",
+          "excluded_macs": "Excluded MAC addresses (comma-separated)"
+        }
       }
     }
   },
