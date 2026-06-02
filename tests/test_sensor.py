@@ -6,16 +6,20 @@ from homeassistant.exceptions import HomeAssistantError
 
 from custom_components.xiaomi_miwifi.binary_sensor import (
     BINARY_SENSOR_DESCRIPTIONS,
+    MiWiFiMeshNodeOnlineSensor,
 )
 from custom_components.xiaomi_miwifi.button import MiWiFiRebootButton
 from custom_components.xiaomi_miwifi.sensor import (
     SENSOR_DESCRIPTIONS,
+    MiWiFiMeshNodeIpSensor,
     MiWiFiMeshNodeStatusSensor,
+    MiWiFiUptimeSensor,
 )
 from custom_components.xiaomi_miwifi.switch import (
     RADIO_SWITCHES,
     MiWiFiRadioSwitch,
 )
+from custom_components.xiaomi_miwifi.update import MiWiFiFirmwareUpdate
 from tests.conftest import make_status
 
 
@@ -29,7 +33,14 @@ def test_sensor_descriptions_cover_expected_keys():
         "download_speed",
         "upload_speed",
         "wan_ip",
-        "wan_uptime",
+        "wan_download_total",
+        "wan_upload_total",
+        "wan_max_download",
+        "wan_max_upload",
+        "wan_type",
+        "wan_gateway",
+        "channel_24g",
+        "channel_5g",
         "firmware_version",
     }
 
@@ -43,12 +54,91 @@ def test_sensor_value_fns_read_status():
     assert by_key["mesh_node_count"].value_fn(status) == 2
 
 
+def test_new_wan_and_wifi_sensor_value_fns():
+    status = make_status(True)
+    by_key = {d.key: d for d in SENSOR_DESCRIPTIONS}
+    assert by_key["wan_download_total"].value_fn(status) == 123456789
+    assert by_key["wan_upload_total"].value_fn(status) == 987654321
+    assert by_key["wan_max_download"].value_fn(status) == 11800000
+    assert by_key["wan_max_upload"].value_fn(status) == 2400000
+    assert by_key["wan_type"].value_fn(status) == "dhcp"
+    assert by_key["wan_gateway"].value_fn(status) == "100.107.32.1"
+    assert by_key["channel_24g"].value_fn(status) == 6
+    assert by_key["channel_5g"].value_fn(status) == 149
+
+
+def test_uptime_sensor_reports_last_boot_timestamp():
+    from datetime import UTC, datetime
+
+    status = make_status(True)
+    coordinator = SimpleNamespace(
+        data=status,
+        last_update_success=True,
+        client=SimpleNamespace(host="1.2.3.4"),
+    )
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    sensor = MiWiFiUptimeSensor(coordinator, entry)
+    value = sensor.native_value
+    assert isinstance(value, datetime)
+    # last boot = now - 90861s; should be in the past
+    assert value < datetime.now(UTC)
+    assert sensor._attr_unique_id == "e1_wan_uptime"
+
+
+def test_mesh_node_ip_sensor():
+    status = make_status(True)
+    coordinator = SimpleNamespace(data=status, last_update_success=True)
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    node = status.mesh_nodes[0]
+    sensor = MiWiFiMeshNodeIpSensor(coordinator, entry, node)
+    assert sensor.native_value == "192.168.31.215"
+    assert sensor._attr_unique_id == "e1_node_192.168.31.215_ip"
+
+
 def test_binary_sensor_descriptions():
     by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
-    assert set(by_key) == {"wan_link", "update_available"}
+    assert set(by_key) == {"wan_link", "led"}
     status = make_status(True)
     assert by_key["wan_link"].value_fn(status) is True
-    assert by_key["update_available"].value_fn(status) is False
+    assert by_key["led"].value_fn(status) is True
+
+
+def test_mesh_node_online_binary_sensor():
+    status = make_status(True)
+    coordinator = SimpleNamespace(data=status, last_update_success=True)
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    node = status.mesh_nodes[1]
+    sensor = MiWiFiMeshNodeOnlineSensor(coordinator, entry, node)
+    assert sensor.is_on is True
+    assert sensor._attr_unique_id == "e1_node_192.168.31.156_online"
+
+
+def test_firmware_update_entity_reports_versions():
+    status = make_status(True)
+    coordinator = SimpleNamespace(
+        data=status,
+        last_update_success=True,
+        client=SimpleNamespace(host="1.2.3.4"),
+    )
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    entity = MiWiFiFirmwareUpdate(coordinator, entry)
+    assert entity.installed_version == "1.0.394"
+    assert entity.latest_version == "1.0.400"
+    assert entity.release_summary == "Bug fixes and stability improvements."
+    assert entity._attr_unique_id == "e1_firmware_update"
+
+
+def test_firmware_update_entity_latest_falls_back_to_installed():
+    status = make_status(True)
+    status.rom_latest_version = ""
+    coordinator = SimpleNamespace(
+        data=status,
+        last_update_success=True,
+        client=SimpleNamespace(host="1.2.3.4"),
+    )
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    entity = MiWiFiFirmwareUpdate(coordinator, entry)
+    assert entity.latest_version == "1.0.394"
 
 
 def test_radio_switch_catalog():
