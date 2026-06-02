@@ -13,6 +13,7 @@ from homeassistant.config_entries import (
 from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.device_registry import format_mac
 
 from xiaomi_miwifi import MiWiFiAuthError, MiWiFiClient, MiWiFiConnectionError
 
@@ -56,13 +57,16 @@ class XiaomiMiWiFiConfigFlow(ConfigFlow, domain=DOMAIN):
             )
             try:
                 await client.async_login()
+                status = await client.async_get_status()
             except MiWiFiAuthError:
                 errors["base"] = "invalid_auth"
             except MiWiFiConnectionError:
                 errors["base"] = "cannot_connect"
             else:
-                await self.async_set_unique_id(user_input[CONF_HOST])
-                self._abort_if_unique_id_configured()
+                await self.async_set_unique_id(format_mac(status.mac))
+                self._abort_if_unique_id_configured(
+                    updates={CONF_HOST: user_input[CONF_HOST]}
+                )
                 return self.async_create_entry(
                     title=user_input[CONF_NAME], data=user_input
                 )

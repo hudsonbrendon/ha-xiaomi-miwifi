@@ -5,6 +5,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
 from custom_components.xiaomi_miwifi.const import CONF_PASSWORD, DOMAIN
+from tests.conftest import make_status
 
 
 async def test_user_flow_creates_entry(hass: HomeAssistant, aioclient_mock):
@@ -19,6 +20,7 @@ async def test_user_flow_creates_entry(hass: HomeAssistant, aioclient_mock):
     ):
         instance = mock_client.return_value
         instance.async_login = AsyncMock(return_value="tok")
+        instance.async_get_status = AsyncMock(return_value=make_status(True))
         instance.async_close = AsyncMock()
         result = await hass.config_entries.flow.async_init(
             DOMAIN, context={"source": "user"}
@@ -154,6 +156,41 @@ async def test_reauth_flow_invalid_auth(hass):
         )
     assert result2["type"] == FlowResultType.FORM
     assert result2["errors"] == {"base": "invalid_auth"}
+
+
+async def test_user_flow_sets_mac_unique_id(hass):
+    from unittest.mock import AsyncMock, MagicMock, patch
+
+    from homeassistant.const import CONF_HOST, CONF_NAME
+    from homeassistant.data_entry_flow import FlowResultType
+
+    from custom_components.xiaomi_miwifi.const import CONF_PASSWORD, DOMAIN
+    from tests.conftest import make_status
+
+    with patch(
+        "custom_components.xiaomi_miwifi.config_flow.MiWiFiClient"
+    ) as mc, patch(
+        "custom_components.xiaomi_miwifi.config_flow.async_get_clientsession",
+        MagicMock(),
+    ), patch(
+        "custom_components.xiaomi_miwifi.async_setup_entry",
+        AsyncMock(return_value=True),
+    ):
+        inst = mc.return_value
+        inst.async_login = AsyncMock(return_value="tok")
+        inst.async_get_status = AsyncMock(return_value=make_status(True))
+        inst.async_close = AsyncMock()
+        result = await hass.config_entries.flow.async_init(
+            DOMAIN, context={"source": "user"}
+        )
+        result2 = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            {CONF_NAME: "Casa", CONF_HOST: "192.168.31.1", CONF_PASSWORD: "foco2021"},
+        )
+    assert result2["type"] == FlowResultType.CREATE_ENTRY
+    entry = result2["result"]
+    # make_status() mac is "28:D1:27:9F:4C:14" -> normalized lowercase colon form
+    assert entry.unique_id == "28:d1:27:9f:4c:14"
 
 
 async def test_reconfigure_flow_updates_host_and_password(hass):
