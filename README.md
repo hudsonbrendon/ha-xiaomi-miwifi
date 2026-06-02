@@ -10,9 +10,14 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 ## Features
 
 - 📊 Sensors: connected devices, per-band client counts, download/upload speed, WAN IP, WAN connected-since, WAN total download/upload, WAN max speeds, WAN type, WAN gateway, 2.4/5 GHz channel, firmware, mesh node count, operating mode, Ethernet ports connected, speed-test download/upload, WAN DNS, port-forwarding rule count, DHCP lease time, timezone
-- 🔌 Binary sensors: WAN link, status LED, DMZ, DDNS
+- 🔌 Binary sensors: WAN link, status LED, DMZ, DDNS, IPv6
 - 🆕 Firmware update entity (install/latest/changelog)
-- 📡 Device tracker: presence for every device seen on the network, with per-client signal, band and traffic attributes
+- 📡 Device tracker: presence for every device seen on the network, with per-client signal, band and traffic attributes, plus `signal_quality` and `last_seen`
+- 🔔 Device events + automation triggers: connected, disconnected, and new-device
+- 🩺 System Health panel (router count, reachability, firmware, devices, mesh nodes)
+- 🛠️ Repairs: firmware-update-available and unsupported-router issues
+- 🔑 Reauthentication and reconfigure flows
+- ⚙️ Advanced options: consider-home debounce and MAC exclusion list
 - 🕸️ One child device per mesh leaf node (model + online + IP)
 - 🎚️ Selects: 2.4/5 GHz Wi-Fi channel and signal strength (transmit power)
 - 🛠️ Controls: 2.4/5 GHz radio switches, QoS switch, reboot button, run-speed-test button
@@ -53,11 +58,12 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 | Timezone | sensor | router timezone, diagnostic |
 | Mesh nodes | sensor | leaf count |
 | Firmware | update | install/latest/changelog |
-| Presence | device_tracker | one per device seen; tracks all seen devices; exposes `signal`, `band`, `download_speed`, `upload_speed`, `download_total`, `upload_total` attributes |
+| Presence | device_tracker | one per device seen; tracks all seen devices; exposes `signal`, `band`, `download_speed`, `upload_speed`, `download_total`, `upload_total`, `signal_quality`, `last_seen` attributes; honours the consider-home debounce |
 | WAN link | binary_sensor | connectivity |
 | Status LED | binary_sensor | LED state |
 | DMZ | binary_sensor | DMZ enabled, diagnostic |
 | DDNS | binary_sensor | DDNS enabled, diagnostic |
+| IPv6 | binary_sensor | IPv6 enabled on WAN, diagnostic |
 | Mesh node online | binary_sensor | per leaf node connectivity |
 | Mesh node IP | sensor | per leaf node, diagnostic |
 | 2.4 GHz / 5 GHz channel | select | ⚠️ disruptive (restarts the radio) |
@@ -80,6 +86,34 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 - `xiaomi_miwifi.set_dmz` — forward all unmatched WAN traffic to a single LAN host.
 - `xiaomi_miwifi.clear_dmz` — disable DMZ forwarding.
 - `xiaomi_miwifi.set_ddns` — enable or disable dynamic DNS.
+
+## Events & automation triggers
+
+The integration fires bus events as devices come and go, and exposes matching device-automation triggers:
+
+| Event | Trigger | Payload |
+|-------|---------|---------|
+| `xiaomi_miwifi_device_connected` | A device connected | `mac`, `name`, `ip` |
+| `xiaomi_miwifi_device_disconnected` | A device disconnected | `mac` |
+| `xiaomi_miwifi_new_device` | A new device joined | `mac`, `name`, `ip` |
+
+## System Health & Repairs
+
+- **System Health** (Settings → System → Repairs → System information) shows router count, reachability, firmware version, connected devices, and mesh nodes.
+- **Repairs** raises informational issues when a firmware update is available or when the router model is not in the supported table.
+
+## Reauthentication & reconfigure
+
+- If the router rejects the stored password, Home Assistant starts a **reauthentication** flow to enter the current password.
+- The **reconfigure** option (integration ⋮ menu) lets you change the router host and password without removing the entry.
+
+## Options
+
+Open the integration's **Configure** dialog to set:
+
+- **Update interval** (seconds) — polling cadence.
+- **Consider-home** (seconds) — how long a device is still reported home after it stops responding.
+- **Excluded MACs** — comma-separated MAC addresses to ignore for presence and events.
 
 ## Supported routers
 

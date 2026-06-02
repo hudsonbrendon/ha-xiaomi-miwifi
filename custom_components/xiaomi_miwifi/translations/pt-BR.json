@@ -77,7 +77,8 @@
       "led": { "name": "LED de status" },
       "mesh_node_online": { "name": "Online" },
       "dmz": { "name": "DMZ" },
-      "ddns": { "name": "DDNS" }
+      "ddns": { "name": "DDNS" },
+      "ipv6": { "name": "IPv6" }
     },
     "update": {
       "firmware": { "name": "Firmware" }

@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented here.
 
+## [0.6.0]
+
+### Added
+
+- **Device events**: the coordinator fires `xiaomi_miwifi_device_connected`, `xiaomi_miwifi_device_disconnected`, and `xiaomi_miwifi_new_device` bus events as devices join, leave, or are seen for the first time.
+- **Device automation triggers**: "A device connected", "A device disconnected", and "A new device joined" triggers for use in automations.
+- **System Health** panel reporting router count, reachability, firmware version, connected devices, and mesh nodes.
+- **Repairs**: informational issues for an available firmware update and for an unsupported router model.
+- **Reauthentication flow**: prompts for a new admin password when the router rejects the stored credentials.
+- **Reconfigure flow**: change the router host and password from the integration page.
+- **Advanced options**: consider-home debounce (seconds) and a comma-separated MAC exclusion list.
+- **Device tracker attributes**: `signal_quality` (excellent/good/weak/poor/unknown) and `last_seen`.
+- **IPv6** diagnostic binary sensor reflecting whether IPv6 is enabled on the WAN.
+
+### Changed
+
+- Bumped the `python-xiaomi-miwifi` requirement to `0.6.0`.
+
 ## [0.5.0]
 
 ### Added

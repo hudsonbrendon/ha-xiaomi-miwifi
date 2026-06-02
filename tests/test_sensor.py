@@ -143,10 +143,15 @@ def test_mesh_node_ip_sensor():
 
 def test_binary_sensor_descriptions():
     by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
-    assert set(by_key) == {"wan_link", "led", "dmz", "ddns"}
+    assert set(by_key) == {"wan_link", "led", "dmz", "ddns", "ipv6"}
     status = make_status(True)
     assert by_key["wan_link"].value_fn(status) is True
     assert by_key["led"].value_fn(status) is True
+
+
+def test_ipv6_binary_sensor():
+    by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
+    assert by_key["ipv6"].value_fn(make_status(True)) is False
 
 
 def test_mesh_node_online_binary_sensor():

@@ -53,6 +53,12 @@ BINARY_SENSOR_DESCRIPTIONS: tuple[MiWiFiBinaryDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda s: s.ddns_on,
     ),
+    MiWiFiBinaryDescription(
+        key="ipv6",
+        translation_key="ipv6",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.ipv6_on,
+    ),
 )
 
 

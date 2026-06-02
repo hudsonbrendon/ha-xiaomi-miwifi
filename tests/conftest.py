@@ -57,6 +57,7 @@ def make_status(online: bool = True) -> MiWiFiStatus:
         dhcp_limit=250,
         dhcp_start=5,
         timezone="CST-8",
+        ipv6_on=False,
         lan_ports=[False, True, False],
         mesh_nodes=[
             MeshNode("Leaf1", "192.168.31.215", "RM1800", "s", 8),
