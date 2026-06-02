@@ -4,7 +4,7 @@ from __future__ import annotations
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, Platform
-from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -34,6 +34,7 @@ SERVICE_ADD_RESERVATION = "add_dhcp_reservation"
 SERVICE_REMOVE_RESERVATION = "remove_dhcp_reservation"
 SERVICE_BLOCK_DEVICE = "block_device"
 SERVICE_UNBLOCK_DEVICE = "unblock_device"
+SERVICE_LUCI_REQUEST = "luci_request"
 
 ADD_RESERVATION_SCHEMA = vol.Schema(
     {
@@ -51,6 +52,9 @@ BLOCK_DEVICE_SCHEMA = vol.Schema(
 )
 UNBLOCK_DEVICE_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("mac"): cv.string}
+)
+LUCI_REQUEST_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("path"): cv.string}
 )
 
 
@@ -90,6 +94,10 @@ def _register_services(hass: HomeAssistant) -> None:
             raise HomeAssistantError("Failed to unblock the device")
         await coord.async_request_refresh()
 
+    async def _luci_request(call: ServiceCall) -> dict:
+        coord = _coordinator(call)
+        return await coord.client.async_luci_request(call.data["path"])
+
     hass.services.async_register(
         DOMAIN, SERVICE_ADD_RESERVATION, _add_reservation, ADD_RESERVATION_SCHEMA
     )
@@ -104,6 +112,13 @@ def _register_services(hass: HomeAssistant) -> None:
     )
     hass.services.async_register(
         DOMAIN, SERVICE_UNBLOCK_DEVICE, _unblock_device, UNBLOCK_DEVICE_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_LUCI_REQUEST,
+        _luci_request,
+        LUCI_REQUEST_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
     )
 
 

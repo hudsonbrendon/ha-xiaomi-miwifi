@@ -7,6 +7,7 @@ from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from custom_components.xiaomi_miwifi import (
     DOMAIN,
     SERVICE_BLOCK_DEVICE,
+    SERVICE_LUCI_REQUEST,
     SERVICE_UNBLOCK_DEVICE,
     _register_services,
 )
@@ -70,6 +71,28 @@ async def test_unblock_device_raises_on_false(hass):
 
     with pytest.raises(HomeAssistantError):
         await _call(hass, SERVICE_UNBLOCK_DEVICE)
+
+
+async def test_luci_request_service_returns_response(hass):
+    coord = _make_coordinator()
+    coord.client.async_luci_request = AsyncMock(
+        return_value={"code": 0, "mode": 0}
+    )
+    hass.data[DOMAIN] = {"e1": coord}
+    _register_services(hass)
+
+    result = await hass.services.async_call(
+        DOMAIN,
+        SERVICE_LUCI_REQUEST,
+        {"entry_id": "e1", "path": "api/misystem/router_info"},
+        blocking=True,
+        return_response=True,
+    )
+
+    coord.client.async_luci_request.assert_awaited_once_with(
+        "api/misystem/router_info"
+    )
+    assert result["mode"] == 0
 
 
 async def test_block_device_unknown_entry_raises(hass):

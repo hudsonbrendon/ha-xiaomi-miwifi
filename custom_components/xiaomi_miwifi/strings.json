@@ -99,6 +99,14 @@
         "entry_id": { "name": "Router", "description": "Target router." },
         "mac": { "name": "MAC", "description": "Device MAC address." }
       }
+    },
+    "luci_request": {
+      "name": "Raw LuCI API request",
+      "description": "Performs a read-only GET to any MiWiFi LuCI API path and returns the JSON.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "path": { "name": "API path", "description": "LuCI path, e.g. api/misystem/router_info." }
+      }
     }
   }
 }

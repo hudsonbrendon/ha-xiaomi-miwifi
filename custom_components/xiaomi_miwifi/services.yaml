@@ -59,3 +59,16 @@ unblock_device:
       example: "AA:BB:CC:DD:EE:FF"
       selector:
         text:
+
+luci_request:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    path:
+      required: true
+      example: "api/misystem/router_info"
+      selector:
+        text:
