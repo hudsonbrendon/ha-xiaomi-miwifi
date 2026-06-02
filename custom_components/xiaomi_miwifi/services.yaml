@@ -1,0 +1,35 @@
+add_dhcp_reservation:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    mac:
+      required: true
+      example: "AA:BB:CC:DD:EE:FF"
+      selector:
+        text:
+    ip:
+      required: true
+      example: "192.168.31.77"
+      selector:
+        text:
+    name:
+      required: true
+      example: "printer"
+      selector:
+        text:
+
+remove_dhcp_reservation:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    mac:
+      required: true
+      example: "AA:BB:CC:DD:EE:FF"
+      selector:
+        text:

@@ -1,0 +1,73 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Xiaomi MiWiFi",
+        "data": {
+          "name": "Name",
+          "host": "Host / IP",
+          "password": "Router admin password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the router",
+      "invalid_auth": "Invalid router password"
+    },
+    "abort": {
+      "already_configured": "This router is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": { "scan_interval": "Update interval (seconds)" }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "client_count": { "name": "Connected devices" },
+      "clients_24g": { "name": "2.4 GHz clients" },
+      "clients_5g": { "name": "5 GHz clients" },
+      "mesh_node_count": { "name": "Mesh nodes" },
+      "download_speed": { "name": "Download speed" },
+      "upload_speed": { "name": "Upload speed" },
+      "wan_ip": { "name": "WAN IP" },
+      "wan_uptime": { "name": "WAN uptime" },
+      "firmware_version": { "name": "Firmware version" },
+      "mesh_node_model": { "name": "Model" }
+    },
+    "binary_sensor": {
+      "wan_link": { "name": "WAN link" },
+      "update_available": { "name": "Firmware update available" }
+    },
+    "switch": {
+      "wifi_5g": { "name": "5 GHz Wi-Fi" },
+      "wifi_24g": { "name": "2.4 GHz Wi-Fi" }
+    },
+    "button": {
+      "reboot": { "name": "Reboot" }
+    }
+  },
+  "services": {
+    "add_dhcp_reservation": {
+      "name": "Add DHCP reservation",
+      "description": "Reserve an IP for a MAC address.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "mac": { "name": "MAC", "description": "Device MAC address." },
+        "ip": { "name": "IP", "description": "IP to reserve." },
+        "name": { "name": "Name", "description": "Reservation label." }
+      }
+    },
+    "remove_dhcp_reservation": {
+      "name": "Remove DHCP reservation",
+      "description": "Remove a reservation by MAC.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "mac": { "name": "MAC", "description": "Device MAC address." }
+      }
+    }
+  }
+}

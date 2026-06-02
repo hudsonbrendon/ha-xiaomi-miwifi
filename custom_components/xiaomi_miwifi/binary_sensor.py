@@ -1,0 +1,73 @@
+"""Binary sensor platform for the Xiaomi MiWiFi integration."""
+from __future__ import annotations
+
+from collections.abc import Callable
+from dataclasses import dataclass
+
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+    BinarySensorEntityDescription,
+)
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from xiaomi_miwifi import MiWiFiStatus
+
+from .const import DOMAIN
+from .coordinator import XiaomiMiWiFiCoordinator
+from .entity import XiaomiMiWiFiEntity
+
+
+@dataclass(frozen=True, kw_only=True)
+class MiWiFiBinaryDescription(BinarySensorEntityDescription):
+    value_fn: Callable[[MiWiFiStatus], bool]
+
+
+BINARY_SENSOR_DESCRIPTIONS: tuple[MiWiFiBinaryDescription, ...] = (
+    MiWiFiBinaryDescription(
+        key="wan_link",
+        translation_key="wan_link",
+        device_class=BinarySensorDeviceClass.CONNECTIVITY,
+        value_fn=lambda s: s.wan_link,
+    ),
+    MiWiFiBinaryDescription(
+        key="update_available",
+        translation_key="update_available",
+        device_class=BinarySensorDeviceClass.UPDATE,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.update_available,
+    ),
+)
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    coordinator: XiaomiMiWiFiCoordinator = hass.data[DOMAIN][entry.entry_id]
+    async_add_entities(
+        MiWiFiBinarySensor(coordinator, entry, desc)
+        for desc in BINARY_SENSOR_DESCRIPTIONS
+    )
+
+
+class MiWiFiBinarySensor(XiaomiMiWiFiEntity, BinarySensorEntity):
+    entity_description: MiWiFiBinaryDescription
+
+    def __init__(
+        self,
+        coordinator: XiaomiMiWiFiCoordinator,
+        entry: ConfigEntry,
+        description: MiWiFiBinaryDescription,
+    ) -> None:
+        super().__init__(coordinator, entry)
+        self.entity_description = description
+        self._attr_unique_id = f"{entry.entry_id}_{description.key}"
+
+    @property
+    def is_on(self) -> bool:
+        return self.entity_description.value_fn(self.coordinator.data)

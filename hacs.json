@@ -1,0 +1,5 @@
+{
+  "name": "Xiaomi MiWiFi",
+  "render_readme": true,
+  "homeassistant": "2024.12.0"
+}

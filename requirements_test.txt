@@ -1,0 +1,6 @@
+homeassistant
+pytest>=8
+pytest-asyncio>=0.23
+pytest-homeassistant-custom-component
+ruff
+python-xiaomi-miwifi==0.1.0

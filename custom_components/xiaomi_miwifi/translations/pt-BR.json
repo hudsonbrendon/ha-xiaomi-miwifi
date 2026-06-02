@@ -1,0 +1,53 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Xiaomi MiWiFi",
+        "data": {
+          "name": "Nome",
+          "host": "Host / IP",
+          "password": "Senha de administrador do roteador"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Falha ao conectar ao roteador",
+      "invalid_auth": "Senha do roteador inválida"
+    },
+    "abort": {
+      "already_configured": "Este roteador já está configurado"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": { "scan_interval": "Intervalo de atualização (segundos)" }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "client_count": { "name": "Dispositivos conectados" },
+      "clients_24g": { "name": "Clientes 2,4 GHz" },
+      "clients_5g": { "name": "Clientes 5 GHz" },
+      "mesh_node_count": { "name": "Nós mesh" },
+      "download_speed": { "name": "Velocidade de download" },
+      "upload_speed": { "name": "Velocidade de upload" },
+      "wan_ip": { "name": "IP WAN" },
+      "wan_uptime": { "name": "Tempo de atividade WAN" },
+      "firmware_version": { "name": "Versão do firmware" },
+      "mesh_node_model": { "name": "Modelo" }
+    },
+    "binary_sensor": {
+      "wan_link": { "name": "Link WAN" },
+      "update_available": { "name": "Atualização de firmware disponível" }
+    },
+    "switch": {
+      "wifi_5g": { "name": "Wi-Fi 5 GHz" },
+      "wifi_24g": { "name": "Wi-Fi 2,4 GHz" }
+    },
+    "button": {
+      "reboot": { "name": "Reiniciar" }
+    }
+  }
+}
