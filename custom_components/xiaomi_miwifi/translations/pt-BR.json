@@ -81,5 +81,12 @@
       "reboot": { "name": "Reiniciar" },
       "speed_test": { "name": "Executar teste de velocidade" }
     }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "device_connected": "Um dispositivo conectou",
+      "device_disconnected": "Um dispositivo desconectou",
+      "new_device": "Um novo dispositivo entrou"
+    }
   }
 }

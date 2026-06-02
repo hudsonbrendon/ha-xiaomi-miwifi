@@ -82,6 +82,13 @@
       "speed_test": { "name": "Run speed test" }
     }
   },
+  "device_automation": {
+    "trigger_type": {
+      "device_connected": "A device connected",
+      "device_disconnected": "A device disconnected",
+      "new_device": "A new device joined"
+    }
+  },
   "services": {
     "add_dhcp_reservation": {
       "name": "Add DHCP reservation",
