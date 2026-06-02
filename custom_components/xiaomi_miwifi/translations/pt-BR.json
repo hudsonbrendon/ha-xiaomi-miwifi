@@ -88,5 +88,14 @@
       "device_disconnected": "Um dispositivo desconectou",
       "new_device": "Um novo dispositivo entrou"
     }
+  },
+  "system_health": {
+    "info": {
+      "routers": "Roteadores",
+      "reachable": "Acessível",
+      "firmware": "Versão do firmware",
+      "devices": "Dispositivos conectados",
+      "mesh_nodes": "Nós mesh"
+    }
   }
 }

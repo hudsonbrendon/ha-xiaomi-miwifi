@@ -89,6 +89,15 @@
       "new_device": "A new device joined"
     }
   },
+  "system_health": {
+    "info": {
+      "routers": "Routers",
+      "reachable": "Reachable",
+      "firmware": "Firmware version",
+      "devices": "Connected devices",
+      "mesh_nodes": "Mesh nodes"
+    }
+  },
   "services": {
     "add_dhcp_reservation": {
       "name": "Add DHCP reservation",
