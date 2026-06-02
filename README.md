@@ -14,7 +14,9 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 - 🆕 Firmware update entity (install/latest/changelog)
 - 📡 Device tracker: presence for every device seen on the network, with per-client signal, band and traffic attributes
 - 🕸️ One child device per mesh leaf node (model + online + IP)
-- 🛠️ Controls: 2.4/5 GHz radio switches, reboot button
+- 🎚️ Selects: 2.4/5 GHz Wi-Fi channel and signal strength (transmit power)
+- 🛠️ Controls: 2.4/5 GHz radio switches, QoS switch, reboot button
+- 🌍 Country-code diagnostic sensor and a full ~45-model supported-router table (incl. RC06 and RD03)
 - ⚙️ Services: `add_dhcp_reservation`, `remove_dhcp_reservation`, `block_device`, `unblock_device`, `luci_request`
 - 🌐 English + Portuguese (pt-BR) translations
 - 🎨 Native brand icons (no home-assistant/brands PR required)
@@ -43,6 +45,7 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 | Firmware version | sensor | diagnostic |
 | Operating mode | sensor | router/repeater/AP/mesh, diagnostic |
 | Ethernet ports connected | sensor | count of linked LAN ports, diagnostic |
+| Country code | sensor | regulatory region, diagnostic |
 | Mesh nodes | sensor | leaf count |
 | Firmware | update | install/latest/changelog |
 | Presence | device_tracker | one per device seen; tracks all seen devices; exposes `signal`, `band`, `download_speed`, `upload_speed`, `download_total`, `upload_total` attributes |
@@ -50,7 +53,10 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 | Status LED | binary_sensor | LED state |
 | Mesh node online | binary_sensor | per leaf node connectivity |
 | Mesh node IP | sensor | per leaf node, diagnostic |
+| 2.4 GHz / 5 GHz channel | select | ⚠️ disruptive (restarts the radio) |
+| 2.4 GHz / 5 GHz signal strength | select | max/mid/min, ⚠️ disruptive |
 | 2.4 GHz / 5 GHz Wi-Fi | switch | ⚠️ disruptive |
+| QoS | switch | smart bandwidth limiting |
 | Reboot | button | ⚠️ disruptive |
 
 ## Services

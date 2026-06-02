@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here.
 
+## [0.4.0]
+
+### Added
+
+- **Wi-Fi channel selects** for the 2.4 GHz and 5 GHz radios, with the available channels (including `auto`) discovered from the router at setup.
+- **Wi-Fi signal-strength (transmit power) selects** for the 2.4 GHz and 5 GHz radios (max/mid/min).
+- **QoS switch** to enable or disable the router's smart bandwidth limiting.
+- **Country code** diagnostic sensor.
+- Expanded the recognized-router support table to the full ~45-model reference set, including the Redmi Router AX6000 (RC06) and Xiaomi Router AX3000T NE (RD03).
+
+### Changed
+
+- Bumped the `python-xiaomi-miwifi` requirement to `0.4.0`.
+
 ## [0.3.0]
 
 ### Added
