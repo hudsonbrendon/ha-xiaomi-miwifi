@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here.
 
+## [0.3.0]
+
+### Added
+
+- **Per-client telemetry on the device tracker**: each presence tracker now exposes `signal`, `band`, `download_speed`, `upload_speed`, `download_total`, and `upload_total` as state attributes.
+- **Operating mode** sensor reporting the router operating mode (router/repeater/access point/mesh), diagnostic.
+- **Ethernet ports connected** sensor reporting the number of linked LAN ports, diagnostic.
+- **Service** `luci_request` — a read-only GET passthrough to any MiWiFi LuCI API path that returns the JSON response.
+
+### Changed
+
+- Bumped the `python-xiaomi-miwifi` requirement to `0.3.0`.
+
 ## [0.2.0]
 
 ### Added

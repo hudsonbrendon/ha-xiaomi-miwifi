@@ -9,13 +9,13 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 
 ## Features
 
-- 📊 Sensors: connected devices, per-band client counts, download/upload speed, WAN IP, WAN connected-since, WAN total download/upload, WAN max speeds, WAN type, WAN gateway, 2.4/5 GHz channel, firmware, mesh node count
+- 📊 Sensors: connected devices, per-band client counts, download/upload speed, WAN IP, WAN connected-since, WAN total download/upload, WAN max speeds, WAN type, WAN gateway, 2.4/5 GHz channel, firmware, mesh node count, operating mode, Ethernet ports connected
 - 🔌 Binary sensors: WAN link, status LED
 - 🆕 Firmware update entity (install/latest/changelog)
-- 📡 Device tracker: presence for every device seen on the network
+- 📡 Device tracker: presence for every device seen on the network, with per-client signal, band and traffic attributes
 - 🕸️ One child device per mesh leaf node (model + online + IP)
 - 🛠️ Controls: 2.4/5 GHz radio switches, reboot button
-- ⚙️ Services: `add_dhcp_reservation`, `remove_dhcp_reservation`, `block_device`, `unblock_device`
+- ⚙️ Services: `add_dhcp_reservation`, `remove_dhcp_reservation`, `block_device`, `unblock_device`, `luci_request`
 - 🌐 English + Portuguese (pt-BR) translations
 - 🎨 Native brand icons (no home-assistant/brands PR required)
 
@@ -41,9 +41,11 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 | WAN gateway | sensor | diagnostic |
 | 2.4 GHz / 5 GHz channel | sensor | diagnostic |
 | Firmware version | sensor | diagnostic |
+| Operating mode | sensor | router/repeater/AP/mesh, diagnostic |
+| Ethernet ports connected | sensor | count of linked LAN ports, diagnostic |
 | Mesh nodes | sensor | leaf count |
 | Firmware | update | install/latest/changelog |
-| Presence | device_tracker | one per device seen; tracks all seen devices |
+| Presence | device_tracker | one per device seen; tracks all seen devices; exposes `signal`, `band`, `download_speed`, `upload_speed`, `download_total`, `upload_total` attributes |
 | WAN link | binary_sensor | connectivity |
 | Status LED | binary_sensor | LED state |
 | Mesh node online | binary_sensor | per leaf node connectivity |
@@ -57,6 +59,7 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 - `xiaomi_miwifi.remove_dhcp_reservation` — remove a reservation.
 - `xiaomi_miwifi.block_device` — block a device from the network by MAC.
 - `xiaomi_miwifi.unblock_device` — unblock a previously blocked device by MAC.
+- `xiaomi_miwifi.luci_request` — perform a read-only GET to any MiWiFi LuCI API path and return the JSON response (e.g. `api/misystem/router_info`).
 
 ## Supported routers
 
