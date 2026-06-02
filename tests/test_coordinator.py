@@ -36,6 +36,17 @@ async def test_coordinator_loads_available_channels(hass: HomeAssistant):
     assert coordinator.channels_5g == ["0", "36", "149"]
 
 
+async def test_coordinator_load_channels_swallows_error(hass: HomeAssistant):
+    from xiaomi_miwifi import MiWiFiError
+
+    client = AsyncMock()
+    client.async_get_available_channels.side_effect = MiWiFiError("x")
+    coordinator = XiaomiMiWiFiCoordinator(hass, client, 30)
+    await coordinator.async_load_channels()
+    assert coordinator.channels_24g == []
+    assert coordinator.channels_5g == []
+
+
 async def test_coordinator_offline_is_not_fatal(hass: HomeAssistant):
     from xiaomi_miwifi import MiWiFiConnectionError
 

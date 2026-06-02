@@ -11,6 +11,7 @@ from xiaomi_miwifi import (
     ClientDevice,
     MiWiFiClient,
     MiWiFiConnectionError,
+    MiWiFiError,
     MiWiFiStatus,
 )
 
@@ -44,7 +45,7 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
         try:
             self.channels_24g = await self.client.async_get_available_channels(1)
             self.channels_5g = await self.client.async_get_available_channels(2)
-        except MiWiFiConnectionError:
+        except MiWiFiError:
             self.channels_24g = []
             self.channels_5g = []
 

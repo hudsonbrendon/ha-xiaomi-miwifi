@@ -61,12 +61,12 @@ class MiWiFiChannelSelect(XiaomiMiWiFiEntity, SelectEntity):
 
     @property
     def current_option(self) -> str | None:
-        chan = (
+        chan = str(
             self.coordinator.data.channel_24g
             if self._wifi_index == WIFI_INDEX_24G
             else self.coordinator.data.channel_5g
         )
-        return str(chan)
+        return chan if chan in self.options else None
 
     async def async_select_option(self, option: str) -> None:
         await self.coordinator.client.async_set_wifi_channel(self._wifi_index, option)

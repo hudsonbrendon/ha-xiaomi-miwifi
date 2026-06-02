@@ -29,6 +29,12 @@ def test_channel_select_options_and_current():
     assert sel.current_option == "6"  # make_status channel_24g == 6
 
 
+def test_channel_select_current_none_when_no_options():
+    sel = MiWiFiChannelSelect(_coord(channels_24g=[]), _entry(), wifi_index=1)
+    assert sel.options == []
+    assert sel.current_option is None
+
+
 async def test_channel_select_calls_client():
     coord = _coord()
     sel = MiWiFiChannelSelect(coord, _entry(), wifi_index=1)
