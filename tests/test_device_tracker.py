@@ -100,6 +100,27 @@ async def test_setup_adds_trackers_and_incrementally_adds_new_mac(hass):
     assert add_cb.call_count == 2
 
 
+def test_tracker_exposes_telemetry_attributes():
+    from xiaomi_miwifi import ClientDevice
+
+    dev = ClientDevice(
+        name="tv", mac="AA:BB:CC:DD:EE:01", ip="192.168.31.9", online=True,
+        parent="", is_router=False, signal=110, band="5G",
+        download_speed=1000, upload_speed=200,
+        download_total=5_000_000, upload_total=900_000,
+    )
+    coordinator = _coordinator([dev])
+    entry = _entry()
+    tracker = MiWiFiDeviceTracker(coordinator, entry, "AA:BB:CC:DD:EE:01")
+    attrs = tracker.extra_state_attributes
+    assert attrs["signal"] == 110
+    assert attrs["band"] == "5G"
+    assert attrs["download_speed"] == 1000
+    assert attrs["upload_speed"] == 200
+    assert attrs["download_total"] == 5_000_000
+    assert attrs["upload_total"] == 900_000
+
+
 def test_async_setup_entry_module_callable():
     # Guard against accidental rename: the platform exposes async_setup_entry.
     assert callable(device_tracker.async_setup_entry)

@@ -114,3 +114,17 @@ class MiWiFiDeviceTracker(CoordinatorEntity[XiaomiMiWiFiCoordinator], ScannerEnt
         if client is not None and client.name:
             return client.name
         return self._last_name
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        client = self._client()
+        if client is None:
+            return {}
+        return {
+            "signal": client.signal,
+            "band": client.band,
+            "download_speed": client.download_speed,
+            "upload_speed": client.upload_speed,
+            "download_total": client.download_total,
+            "upload_total": client.upload_total,
+        }
