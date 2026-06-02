@@ -91,3 +91,103 @@ async def test_options_flow_accepts_consider_home_and_excluded_macs(hass):
     assert result2["type"] == FlowResultType.CREATE_ENTRY
     assert result2["data"][CONF_CONSIDER_HOME] == 300
     assert result2["data"][CONF_EXCLUDED_MACS] == "AA:BB:CC:DD:EE:FF"
+
+
+async def test_reauth_flow_updates_password(hass):
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            CONF_NAME: "Casa",
+            CONF_HOST: "192.168.31.1",
+            CONF_PASSWORD: "old",
+        },
+    )
+    entry.add_to_hass(hass)
+    with patch(
+        "custom_components.xiaomi_miwifi.config_flow.MiWiFiClient"
+    ) as mc, patch(
+        "custom_components.xiaomi_miwifi.config_flow.async_get_clientsession",
+        MagicMock(),
+    ), patch(
+        "custom_components.xiaomi_miwifi.async_setup_entry",
+        AsyncMock(return_value=True),
+    ):
+        inst = mc.return_value
+        inst.async_login = AsyncMock(return_value="tok")
+        inst.async_close = AsyncMock()
+        result = await entry.start_reauth_flow(hass)
+        result2 = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {CONF_PASSWORD: "new"}
+        )
+    assert result2["type"] == FlowResultType.ABORT
+    assert result2["reason"] == "reauth_successful"
+    assert entry.data[CONF_PASSWORD] == "new"
+
+
+async def test_reauth_flow_invalid_auth(hass):
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+    from xiaomi_miwifi import MiWiFiAuthError
+
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            CONF_NAME: "Casa",
+            CONF_HOST: "192.168.31.1",
+            CONF_PASSWORD: "old",
+        },
+    )
+    entry.add_to_hass(hass)
+    with patch(
+        "custom_components.xiaomi_miwifi.config_flow.MiWiFiClient"
+    ) as mc, patch(
+        "custom_components.xiaomi_miwifi.config_flow.async_get_clientsession",
+        MagicMock(),
+    ):
+        inst = mc.return_value
+        inst.async_login = AsyncMock(side_effect=MiWiFiAuthError("bad"))
+        inst.async_close = AsyncMock()
+        result = await entry.start_reauth_flow(hass)
+        result2 = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {CONF_PASSWORD: "wrong"}
+        )
+    assert result2["type"] == FlowResultType.FORM
+    assert result2["errors"] == {"base": "invalid_auth"}
+
+
+async def test_reconfigure_flow_updates_host_and_password(hass):
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        unique_id="192.168.31.1",
+        data={
+            CONF_NAME: "Casa",
+            CONF_HOST: "192.168.31.1",
+            CONF_PASSWORD: "old",
+        },
+    )
+    entry.add_to_hass(hass)
+    with patch(
+        "custom_components.xiaomi_miwifi.config_flow.MiWiFiClient"
+    ) as mc, patch(
+        "custom_components.xiaomi_miwifi.config_flow.async_get_clientsession",
+        MagicMock(),
+    ), patch(
+        "custom_components.xiaomi_miwifi.async_setup_entry",
+        AsyncMock(return_value=True),
+    ):
+        inst = mc.return_value
+        inst.async_login = AsyncMock(return_value="tok")
+        inst.async_close = AsyncMock()
+        result = await entry.start_reconfigure_flow(hass)
+        assert result["type"] == FlowResultType.FORM
+        result2 = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            {CONF_HOST: "192.168.31.2", CONF_PASSWORD: "new"},
+        )
+    assert result2["type"] == FlowResultType.ABORT
+    assert result2["reason"] == "reconfigure_successful"
+    assert entry.data[CONF_HOST] == "192.168.31.2"
+    assert entry.data[CONF_PASSWORD] == "new"

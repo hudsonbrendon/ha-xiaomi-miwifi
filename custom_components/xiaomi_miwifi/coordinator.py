@@ -5,10 +5,12 @@ import logging
 from datetime import timedelta
 
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from xiaomi_miwifi import (
     ClientDevice,
+    MiWiFiAuthError,
     MiWiFiClient,
     MiWiFiConnectionError,
     MiWiFiError,
@@ -88,6 +90,8 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
     async def _async_update_data(self) -> MiWiFiStatus:
         try:
             status = await self.client.async_get_status()
+        except MiWiFiAuthError as err:
+            raise ConfigEntryAuthFailed(str(err)) from err
         except MiWiFiConnectionError as err:
             _LOGGER.debug("MiWiFi unreachable: %s", err)
             return MiWiFiStatus(online=False)

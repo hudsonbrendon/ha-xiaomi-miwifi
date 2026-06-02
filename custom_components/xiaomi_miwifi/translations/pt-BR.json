@@ -8,6 +8,20 @@
           "host": "Host / IP",
           "password": "Senha de administrador do roteador"
         }
+      },
+      "reauth_confirm": {
+        "title": "Reautenticar Xiaomi MiWiFi",
+        "description": "O roteador rejeitou a senha armazenada. Informe a senha de administrador atual.",
+        "data": {
+          "password": "Senha de administrador do roteador"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurar Xiaomi MiWiFi",
+        "data": {
+          "host": "Host / IP",
+          "password": "Senha de administrador do roteador"
+        }
       }
     },
     "error": {
@@ -15,7 +29,9 @@
       "invalid_auth": "Senha do roteador inválida"
     },
     "abort": {
-      "already_configured": "Este roteador já está configurado"
+      "already_configured": "Este roteador já está configurado",
+      "reauth_successful": "Reautenticação realizada com sucesso",
+      "reconfigure_successful": "Reconfiguração realizada com sucesso"
     }
   },
   "options": {

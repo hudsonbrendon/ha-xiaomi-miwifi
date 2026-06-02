@@ -70,6 +70,93 @@ class XiaomiMiWiFiConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="user", data_schema=USER_SCHEMA, errors=errors
         )
 
+    async def async_step_reauth(
+        self, entry_data: dict[str, Any]
+    ) -> ConfigFlowResult:
+        self._reauth_entry = self.hass.config_entries.async_get_entry(
+            self.context["entry_id"]
+        )
+        return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            session = async_get_clientsession(self.hass)
+            client = MiWiFiClient(
+                self._reauth_entry.data[CONF_HOST],
+                password=user_input[CONF_PASSWORD],
+                session=session,
+            )
+            try:
+                await client.async_login()
+            except MiWiFiAuthError:
+                errors["base"] = "invalid_auth"
+            except MiWiFiConnectionError:
+                errors["base"] = "cannot_connect"
+            else:
+                return self.async_update_reload_and_abort(
+                    self._reauth_entry,
+                    data={
+                        **self._reauth_entry.data,
+                        CONF_PASSWORD: user_input[CONF_PASSWORD],
+                    },
+                )
+        return self.async_show_form(
+            step_id="reauth_confirm",
+            data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}),
+            errors=errors,
+        )
+
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        entry = self._get_reconfigure_entry()
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            session = async_get_clientsession(self.hass)
+            client = MiWiFiClient(
+                user_input[CONF_HOST],
+                password=user_input[CONF_PASSWORD],
+                session=session,
+            )
+            try:
+                await client.async_login()
+            except MiWiFiAuthError:
+                errors["base"] = "invalid_auth"
+            except MiWiFiConnectionError:
+                errors["base"] = "cannot_connect"
+            else:
+                await self.async_set_unique_id(user_input[CONF_HOST])
+                for other in self._async_current_entries():
+                    if (
+                        other.entry_id != entry.entry_id
+                        and other.unique_id == user_input[CONF_HOST]
+                    ):
+                        return self.async_abort(reason="already_configured")
+                return self.async_update_reload_and_abort(
+                    entry,
+                    unique_id=user_input[CONF_HOST],
+                    data={
+                        **entry.data,
+                        CONF_HOST: user_input[CONF_HOST],
+                        CONF_PASSWORD: user_input[CONF_PASSWORD],
+                    },
+                )
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_HOST, default=entry.data[CONF_HOST]
+                    ): str,
+                    vol.Required(CONF_PASSWORD): str,
+                }
+            ),
+            errors=errors,
+        )
+
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> XiaomiMiWiFiOptionsFlow:

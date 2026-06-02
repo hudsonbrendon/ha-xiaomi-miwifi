@@ -8,6 +8,20 @@
           "host": "Host / IP",
           "password": "Router admin password"
         }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate Xiaomi MiWiFi",
+        "description": "The router rejected the stored password. Enter the current admin password.",
+        "data": {
+          "password": "Router admin password"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure Xiaomi MiWiFi",
+        "data": {
+          "host": "Host / IP",
+          "password": "Router admin password"
+        }
       }
     },
     "error": {
@@ -15,7 +29,9 @@
       "invalid_auth": "Invalid router password"
     },
     "abort": {
-      "already_configured": "This router is already configured"
+      "already_configured": "This router is already configured",
+      "reauth_successful": "Re-authentication was successful",
+      "reconfigure_successful": "Reconfiguration was successful"
     }
   },
   "options": {
