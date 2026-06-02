@@ -23,7 +23,6 @@ from xiaomi_miwifi import MiWiFiStatus
 from .const import DOMAIN
 from .coordinator import XiaomiMiWiFiCoordinator
 from .entity import XiaomiMiWiFiEntity
-from .mesh_entity import XiaomiMeshNodeEntity
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -232,9 +231,6 @@ async def async_setup_entry(
         MiWiFiSensor(coordinator, entry, desc) for desc in SENSOR_DESCRIPTIONS
     ]
     entities.append(MiWiFiUptimeSensor(coordinator, entry))
-    for node in coordinator.data.mesh_nodes:
-        entities.append(MiWiFiMeshNodeStatusSensor(coordinator, entry, node))
-        entities.append(MiWiFiMeshNodeIpSensor(coordinator, entry, node))
     async_add_entities(entities)
 
 
@@ -289,44 +285,3 @@ class MiWiFiUptimeSensor(XiaomiMiWiFiEntity, SensorEntity):
     @property
     def available(self) -> bool:
         return super().available and self.coordinator.data.online
-
-
-class MiWiFiMeshNodeIpSensor(XiaomiMeshNodeEntity, SensorEntity):
-    """Reports the IP address of a mesh leaf node."""
-
-    _attr_translation_key = "mesh_node_ip"
-    _attr_icon = "mdi:ip-network"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-
-    def __init__(self, coordinator, entry, node) -> None:
-        super().__init__(coordinator, entry, node)
-        self._attr_unique_id = f"{entry.entry_id}_node_{node.ip}_ip"
-
-    @property
-    def native_value(self) -> str | None:
-        node = self._current_node()
-        return node.ip if node else None
-
-    @property
-    def available(self) -> bool:
-        return super().available and self._current_node() is not None
-
-
-class MiWiFiMeshNodeStatusSensor(XiaomiMeshNodeEntity, SensorEntity):
-    """Reports the model name of a mesh leaf node (presence = available)."""
-
-    _attr_translation_key = "mesh_node_model"
-    _attr_icon = "mdi:router-network"
-
-    def __init__(self, coordinator, entry, node) -> None:
-        super().__init__(coordinator, entry, node)
-        self._attr_unique_id = f"{entry.entry_id}_node_{node.ip}_model"
-
-    @property
-    def native_value(self) -> str | None:
-        node = self._current_node()
-        return node.model if node else None
-
-    @property
-    def available(self) -> bool:
-        return super().available and self._current_node() is not None

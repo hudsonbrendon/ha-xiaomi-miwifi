@@ -66,8 +66,6 @@
       "firmware_version": { "name": "Firmware version" },
       "mode": { "name": "Operating mode" },
       "ethernet_ports": { "name": "Ethernet ports connected" },
-      "mesh_node_model": { "name": "Model" },
-      "mesh_node_ip": { "name": "IP address" },
       "country_code": { "name": "Country code" },
       "speedtest_download": { "name": "Speed test download" },
       "speedtest_upload": { "name": "Speed test upload" },
@@ -79,7 +77,6 @@
     "binary_sensor": {
       "wan_link": { "name": "WAN link" },
       "led": { "name": "Status LED" },
-      "mesh_node_online": { "name": "Online" },
       "dmz": { "name": "DMZ" },
       "ddns": { "name": "DDNS" },
       "ipv6": { "name": "IPv6" }

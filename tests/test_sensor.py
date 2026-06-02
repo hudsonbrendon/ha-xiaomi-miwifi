@@ -6,13 +6,10 @@ from homeassistant.exceptions import HomeAssistantError
 
 from custom_components.xiaomi_miwifi.binary_sensor import (
     BINARY_SENSOR_DESCRIPTIONS,
-    MiWiFiMeshNodeOnlineSensor,
 )
 from custom_components.xiaomi_miwifi.button import MiWiFiRebootButton
 from custom_components.xiaomi_miwifi.sensor import (
     SENSOR_DESCRIPTIONS,
-    MiWiFiMeshNodeIpSensor,
-    MiWiFiMeshNodeStatusSensor,
     MiWiFiUptimeSensor,
 )
 from custom_components.xiaomi_miwifi.switch import (
@@ -131,16 +128,6 @@ def test_uptime_sensor_is_stable_across_polls(monkeypatch):
     assert first.microsecond == 0
 
 
-def test_mesh_node_ip_sensor():
-    status = make_status(True)
-    coordinator = SimpleNamespace(data=status, last_update_success=True)
-    entry = SimpleNamespace(entry_id="e1", title="Casa")
-    node = status.mesh_nodes[0]
-    sensor = MiWiFiMeshNodeIpSensor(coordinator, entry, node)
-    assert sensor.native_value == "192.168.31.215"
-    assert sensor._attr_unique_id == "e1_node_192.168.31.215_ip"
-
-
 def test_binary_sensor_descriptions():
     by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
     assert set(by_key) == {"wan_link", "led", "dmz", "ddns", "ipv6"}
@@ -152,16 +139,6 @@ def test_binary_sensor_descriptions():
 def test_ipv6_binary_sensor():
     by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
     assert by_key["ipv6"].value_fn(make_status(True)) is False
-
-
-def test_mesh_node_online_binary_sensor():
-    status = make_status(True)
-    coordinator = SimpleNamespace(data=status, last_update_success=True)
-    entry = SimpleNamespace(entry_id="e1", title="Casa")
-    node = status.mesh_nodes[1]
-    sensor = MiWiFiMeshNodeOnlineSensor(coordinator, entry, node)
-    assert sensor.is_on is True
-    assert sensor._attr_unique_id == "e1_node_192.168.31.156_online"
 
 
 def test_firmware_update_entity_reports_versions():
@@ -288,13 +265,3 @@ async def test_qos_switch_on_off():
     assert sw.is_on is True  # make_status qos_on == True
     await sw.async_turn_off()
     coord.client.async_set_qos.assert_awaited_once_with(False)
-
-
-async def test_mesh_node_sensor_reports_online_and_model(hass):
-    status = make_status(True)
-    coordinator = SimpleNamespace(data=status, last_update_success=True)
-    entry = SimpleNamespace(entry_id="e1", title="Casa")
-    node = status.mesh_nodes[1]  # RA82 leaf
-    sensor = MiWiFiMeshNodeStatusSensor(coordinator, entry, node)
-    assert sensor.native_value == "Xiaomi Router AX3000T"
-    assert sensor._attr_unique_id == "e1_node_192.168.31.156_model"

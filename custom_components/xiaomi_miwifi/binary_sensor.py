@@ -19,7 +19,6 @@ from xiaomi_miwifi import MiWiFiStatus
 from .const import DOMAIN
 from .coordinator import XiaomiMiWiFiCoordinator
 from .entity import XiaomiMiWiFiEntity
-from .mesh_entity import XiaomiMeshNodeEntity
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -72,8 +71,6 @@ async def async_setup_entry(
         MiWiFiBinarySensor(coordinator, entry, desc)
         for desc in BINARY_SENSOR_DESCRIPTIONS
     ]
-    for node in coordinator.data.mesh_nodes:
-        entities.append(MiWiFiMeshNodeOnlineSensor(coordinator, entry, node))
     async_add_entities(entities)
 
 
@@ -93,18 +90,3 @@ class MiWiFiBinarySensor(XiaomiMiWiFiEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool:
         return self.entity_description.value_fn(self.coordinator.data)
-
-
-class MiWiFiMeshNodeOnlineSensor(XiaomiMeshNodeEntity, BinarySensorEntity):
-    """Connectivity sensor reporting whether a mesh leaf node is online."""
-
-    _attr_translation_key = "mesh_node_online"
-    _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
-
-    def __init__(self, coordinator, entry, node) -> None:
-        super().__init__(coordinator, entry, node)
-        self._attr_unique_id = f"{entry.entry_id}_node_{node.ip}_online"
-
-    @property
-    def is_on(self) -> bool:
-        return self._current_node() is not None
