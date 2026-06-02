@@ -32,6 +32,8 @@ ATTR_ENTRY_ID = "entry_id"
 
 SERVICE_ADD_RESERVATION = "add_dhcp_reservation"
 SERVICE_REMOVE_RESERVATION = "remove_dhcp_reservation"
+SERVICE_BLOCK_DEVICE = "block_device"
+SERVICE_UNBLOCK_DEVICE = "unblock_device"
 
 ADD_RESERVATION_SCHEMA = vol.Schema(
     {
@@ -42,6 +44,12 @@ ADD_RESERVATION_SCHEMA = vol.Schema(
     }
 )
 REMOVE_RESERVATION_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("mac"): cv.string}
+)
+BLOCK_DEVICE_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("mac"): cv.string}
+)
+UNBLOCK_DEVICE_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("mac"): cv.string}
 )
 
@@ -70,6 +78,18 @@ def _register_services(hass: HomeAssistant) -> None:
             raise HomeAssistantError("Failed to remove the DHCP reservation")
         await coord.async_request_refresh()
 
+    async def _block_device(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        if not await coord.client.async_block_device(call.data["mac"]):
+            raise HomeAssistantError("Failed to block the device")
+        await coord.async_request_refresh()
+
+    async def _unblock_device(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        if not await coord.client.async_unblock_device(call.data["mac"]):
+            raise HomeAssistantError("Failed to unblock the device")
+        await coord.async_request_refresh()
+
     hass.services.async_register(
         DOMAIN, SERVICE_ADD_RESERVATION, _add_reservation, ADD_RESERVATION_SCHEMA
     )
@@ -78,6 +98,12 @@ def _register_services(hass: HomeAssistant) -> None:
         SERVICE_REMOVE_RESERVATION,
         _remove_reservation,
         REMOVE_RESERVATION_SCHEMA,
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_BLOCK_DEVICE, _block_device, BLOCK_DEVICE_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_UNBLOCK_DEVICE, _unblock_device, UNBLOCK_DEVICE_SCHEMA
     )
 
 

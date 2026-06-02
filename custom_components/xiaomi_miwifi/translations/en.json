@@ -81,6 +81,22 @@
         "entry_id": { "name": "Router", "description": "Target router." },
         "mac": { "name": "MAC", "description": "Device MAC address." }
       }
+    },
+    "block_device": {
+      "name": "Block device",
+      "description": "Block a device from accessing the network by MAC.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "mac": { "name": "MAC", "description": "Device MAC address." }
+      }
+    },
+    "unblock_device": {
+      "name": "Unblock device",
+      "description": "Unblock a previously blocked device by MAC.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "mac": { "name": "MAC", "description": "Device MAC address." }
+      }
     }
   }
 }

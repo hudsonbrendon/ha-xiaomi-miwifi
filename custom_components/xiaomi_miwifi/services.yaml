@@ -33,3 +33,29 @@ remove_dhcp_reservation:
       example: "AA:BB:CC:DD:EE:FF"
       selector:
         text:
+
+block_device:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    mac:
+      required: true
+      example: "AA:BB:CC:DD:EE:FF"
+      selector:
+        text:
+
+unblock_device:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    mac:
+      required: true
+      example: "AA:BB:CC:DD:EE:FF"
+      selector:
+        text:
