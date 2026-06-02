@@ -34,13 +34,26 @@
       "download_speed": { "name": "Velocidade de download" },
       "upload_speed": { "name": "Velocidade de upload" },
       "wan_ip": { "name": "IP WAN" },
-      "wan_uptime": { "name": "Tempo de atividade WAN" },
+      "wan_uptime": { "name": "WAN conectado desde" },
+      "wan_download_total": { "name": "Total de download WAN" },
+      "wan_upload_total": { "name": "Total de upload WAN" },
+      "wan_max_download": { "name": "Velocidade máxima de download WAN" },
+      "wan_max_upload": { "name": "Velocidade máxima de upload WAN" },
+      "wan_type": { "name": "Tipo de WAN" },
+      "wan_gateway": { "name": "Gateway WAN" },
+      "channel_24g": { "name": "Canal 2,4 GHz" },
+      "channel_5g": { "name": "Canal 5 GHz" },
       "firmware_version": { "name": "Versão do firmware" },
-      "mesh_node_model": { "name": "Modelo" }
+      "mesh_node_model": { "name": "Modelo" },
+      "mesh_node_ip": { "name": "Endereço IP" }
     },
     "binary_sensor": {
       "wan_link": { "name": "Link WAN" },
-      "update_available": { "name": "Atualização de firmware disponível" }
+      "led": { "name": "LED de status" },
+      "mesh_node_online": { "name": "Online" }
+    },
+    "update": {
+      "firmware": { "name": "Firmware" }
     },
     "switch": {
       "wifi_5g": { "name": "Wi-Fi 5 GHz" },
