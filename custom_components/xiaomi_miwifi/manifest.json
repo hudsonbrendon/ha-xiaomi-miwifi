@@ -3,6 +3,12 @@
   "name": "Xiaomi MiWiFi",
   "codeowners": ["@hudsonbrendon"],
   "config_flow": true,
+  "dhcp": [
+    { "hostname": "xiaomi*" },
+    { "hostname": "miwifi*" },
+    { "hostname": "redmi*" },
+    { "hostname": "*xiaomi-router*" }
+  ],
   "documentation": "https://github.com/hudsonbrendon/ha-xiaomi-miwifi",
   "integration_type": "hub",
   "iot_class": "local_polling",

@@ -77,6 +77,18 @@ class XiaomiMiWiFiConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="user", data_schema=USER_SCHEMA, errors=errors
         )
 
+    async def async_step_dhcp(self, discovery_info) -> ConfigFlowResult:
+        await self.async_set_unique_id(format_mac(discovery_info.macaddress))
+        self._abort_if_unique_id_configured(updates={CONF_HOST: discovery_info.ip})
+        self._async_abort_entries_match({CONF_HOST: discovery_info.ip})
+        self._discovered = {
+            CONF_HOST: discovery_info.ip,
+            CONF_NAME: discovery_info.hostname or DEFAULT_NAME,
+        }
+        self._parent_mac = None
+        self.context["title_placeholders"] = {"name": self._discovered[CONF_NAME]}
+        return await self.async_step_discovery_confirm()
+
     async def async_step_integration_discovery(
         self, discovery_info: dict[str, Any]
     ) -> ConfigFlowResult:

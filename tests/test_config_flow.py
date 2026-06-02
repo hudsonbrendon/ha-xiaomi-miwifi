@@ -274,3 +274,21 @@ async def test_integration_discovery_reuses_password(hass):
     assert result["type"] == FlowResultType.CREATE_ENTRY
     assert result["result"].data[CONF_HOST] == "192.168.31.215"
     assert result["result"].data[CONF_PASSWORD] == "foco2021"
+
+
+async def test_dhcp_discovery_starts_flow(hass):
+    from homeassistant.config_entries import SOURCE_DHCP
+
+    try:
+        from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
+    except ImportError:  # HA < 2025.1
+        from homeassistant.components.dhcp import DhcpServiceInfo
+
+    info = DhcpServiceInfo(
+        ip="192.168.31.215", hostname="xiaomi-c54c", macaddress="8cdef993c54c"
+    )
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": SOURCE_DHCP}, data=info
+    )
+    assert result["type"] == FlowResultType.FORM
+    assert result["step_id"] == "discovery_confirm"
