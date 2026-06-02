@@ -9,11 +9,13 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 
 ## Features
 
-- 📊 Sensors: connected devices, per-band client counts, download/upload speed, WAN IP, WAN uptime, firmware, mesh node count
-- 🔌 Binary sensors: WAN link, firmware-update-available
-- 🕸️ One child device per mesh leaf node (model + presence)
+- 📊 Sensors: connected devices, per-band client counts, download/upload speed, WAN IP, WAN connected-since, WAN total download/upload, WAN max speeds, WAN type, WAN gateway, 2.4/5 GHz channel, firmware, mesh node count
+- 🔌 Binary sensors: WAN link, status LED
+- 🆕 Firmware update entity (install/latest/changelog)
+- 📡 Device tracker: presence for every device seen on the network
+- 🕸️ One child device per mesh leaf node (model + online + IP)
 - 🛠️ Controls: 2.4/5 GHz radio switches, reboot button
-- ⚙️ Services: `add_dhcp_reservation`, `remove_dhcp_reservation`
+- ⚙️ Services: `add_dhcp_reservation`, `remove_dhcp_reservation`, `block_device`, `unblock_device`
 - 🌐 English + Portuguese (pt-BR) translations
 - 🎨 Native brand icons (no home-assistant/brands PR required)
 
@@ -32,11 +34,20 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 | 2.4 GHz / 5 GHz clients | sensor | per-band counts |
 | Download / Upload speed | sensor | aggregate B/s |
 | WAN IP | sensor | public IP |
-| WAN uptime | sensor | diagnostic |
+| WAN connected since | sensor | timestamp, diagnostic |
+| WAN download / upload total | sensor | cumulative bytes |
+| WAN max download / upload speed | sensor | peak B/s |
+| WAN type | sensor | e.g. `dhcp`, diagnostic |
+| WAN gateway | sensor | diagnostic |
+| 2.4 GHz / 5 GHz channel | sensor | diagnostic |
 | Firmware version | sensor | diagnostic |
 | Mesh nodes | sensor | leaf count |
+| Firmware | update | install/latest/changelog |
+| Presence | device_tracker | one per device seen; tracks all seen devices |
 | WAN link | binary_sensor | connectivity |
-| Firmware update available | binary_sensor | update |
+| Status LED | binary_sensor | LED state |
+| Mesh node online | binary_sensor | per leaf node connectivity |
+| Mesh node IP | sensor | per leaf node, diagnostic |
 | 2.4 GHz / 5 GHz Wi-Fi | switch | ⚠️ disruptive |
 | Reboot | button | ⚠️ disruptive |
 
@@ -44,6 +55,8 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 
 - `xiaomi_miwifi.add_dhcp_reservation` — reserve an IP for a MAC.
 - `xiaomi_miwifi.remove_dhcp_reservation` — remove a reservation.
+- `xiaomi_miwifi.block_device` — block a device from the network by MAC.
+- `xiaomi_miwifi.unblock_device` — unblock a previously blocked device by MAC.
 
 ## Supported routers
 
