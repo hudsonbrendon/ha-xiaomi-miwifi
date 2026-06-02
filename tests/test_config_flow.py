@@ -61,3 +61,33 @@ async def test_user_flow_handles_auth_error(hass: HomeAssistant, aioclient_mock)
         )
     assert result2["type"] == FlowResultType.FORM
     assert result2["errors"] == {"base": "invalid_auth"}
+
+
+async def test_options_flow_accepts_consider_home_and_excluded_macs(hass):
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+    from custom_components.xiaomi_miwifi.const import (
+        CONF_CONSIDER_HOME,
+        CONF_EXCLUDED_MACS,
+        CONF_SCAN_INTERVAL,
+    )
+
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={CONF_NAME: "Casa", CONF_HOST: "192.168.31.1", CONF_PASSWORD: "p"},
+    )
+    entry.add_to_hass(hass)
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["type"] == FlowResultType.FORM
+    result2 = await hass.config_entries.options.async_configure(
+        result["flow_id"],
+        {
+            CONF_SCAN_INTERVAL: 30,
+            CONF_CONSIDER_HOME: 300,
+            CONF_EXCLUDED_MACS: "AA:BB:CC:DD:EE:FF",
+        },
+    )
+    assert result2["type"] == FlowResultType.CREATE_ENTRY
+    assert result2["data"][CONF_CONSIDER_HOME] == 300
+    assert result2["data"][CONF_EXCLUDED_MACS] == "AA:BB:CC:DD:EE:FF"

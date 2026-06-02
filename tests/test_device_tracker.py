@@ -29,6 +29,8 @@ def _coordinator(clients):
         data=make_status(True),
         clients=list(clients),
         last_update_success=True,
+        last_seen={},
+        consider_home=180,
     )
     coord._listeners = []
 
@@ -124,3 +126,20 @@ def test_tracker_exposes_telemetry_attributes():
 def test_async_setup_entry_module_callable():
     # Guard against accidental rename: the platform exposes async_setup_entry.
     assert callable(device_tracker.async_setup_entry)
+
+
+def test_tracker_signal_quality_and_last_seen():
+    from xiaomi_miwifi import ClientDevice
+
+    from custom_components.xiaomi_miwifi.device_tracker import (
+        MiWiFiDeviceTracker,
+    )
+
+    dev = ClientDevice(name="tv", mac="AA:BB:CC:DD:EE:01", ip="192.168.31.9",
+                       online=True, parent="", is_router=False, signal=110,
+                       band="5G")
+    coordinator = _coordinator(clients=[dev])
+    tracker = MiWiFiDeviceTracker(coordinator, _entry(), "AA:BB:CC:DD:EE:01")
+    attrs = tracker.extra_state_attributes
+    assert attrs["signal_quality"] == "excellent"
+    assert "last_seen" in attrs

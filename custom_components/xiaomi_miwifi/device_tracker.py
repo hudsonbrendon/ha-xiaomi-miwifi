@@ -18,6 +18,18 @@ from .const import DOMAIN
 from .coordinator import XiaomiMiWiFiCoordinator
 
 
+def _signal_quality(signal: int) -> str:
+    if signal <= 0:
+        return "unknown"
+    if signal >= 100:
+        return "excellent"
+    if signal >= 70:
+        return "good"
+    if signal >= 40:
+        return "weak"
+    return "poor"
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -91,7 +103,16 @@ class MiWiFiDeviceTracker(CoordinatorEntity[XiaomiMiWiFiCoordinator], ScannerEnt
     @property
     def is_connected(self) -> bool:
         client = self._client()
-        return client is not None and client.online
+        if client is not None and client.online:
+            return True
+        from homeassistant.util import dt as dt_util
+
+        seen = self.coordinator.last_seen.get(self._mac.upper())
+        if seen is None:
+            return False
+        return (
+            dt_util.utcnow() - seen
+        ).total_seconds() < self.coordinator.consider_home
 
     @property
     def source_type(self) -> SourceType:
@@ -122,9 +143,11 @@ class MiWiFiDeviceTracker(CoordinatorEntity[XiaomiMiWiFiCoordinator], ScannerEnt
             return {}
         return {
             "signal": client.signal,
+            "signal_quality": _signal_quality(client.signal),
             "band": client.band,
             "download_speed": client.download_speed,
             "upload_speed": client.upload_speed,
             "download_total": client.download_total,
             "upload_total": client.upload_total,
+            "last_seen": self.coordinator.last_seen.get(self._mac.upper()),
         }

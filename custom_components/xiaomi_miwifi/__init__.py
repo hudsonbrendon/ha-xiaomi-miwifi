@@ -12,8 +12,11 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from xiaomi_miwifi import MiWiFiClient
 
 from .const import (
+    CONF_CONSIDER_HOME,
+    CONF_EXCLUDED_MACS,
     CONF_PASSWORD,
     CONF_SCAN_INTERVAL,
+    DEFAULT_CONSIDER_HOME,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
@@ -220,6 +223,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
     scan_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     coordinator = XiaomiMiWiFiCoordinator(hass, client, scan_interval)
+    coordinator.consider_home = entry.options.get(
+        CONF_CONSIDER_HOME, DEFAULT_CONSIDER_HOME
+    )
+    raw_excl = entry.options.get(CONF_EXCLUDED_MACS, "")
+    coordinator.excluded_macs = {
+        m.strip().upper() for m in raw_excl.split(",") if m.strip()
+    }
     await coordinator.async_config_entry_first_refresh()
     await coordinator.async_load_channels()
 

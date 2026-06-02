@@ -17,8 +17,11 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from xiaomi_miwifi import MiWiFiAuthError, MiWiFiClient, MiWiFiConnectionError
 
 from .const import (
+    CONF_CONSIDER_HOME,
+    CONF_EXCLUDED_MACS,
     CONF_PASSWORD,
     CONF_SCAN_INTERVAL,
+    DEFAULT_CONSIDER_HOME,
     DEFAULT_NAME,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
@@ -84,12 +87,21 @@ class XiaomiMiWiFiOptionsFlow(OptionsFlow):
     ) -> ConfigFlowResult:
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
-        current = self._entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+        opts = self._entry.options
+        current = opts.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
         schema = vol.Schema(
             {
                 vol.Optional(CONF_SCAN_INTERVAL, default=current): vol.All(
                     int, vol.Range(min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL)
-                )
+                ),
+                vol.Optional(
+                    CONF_CONSIDER_HOME,
+                    default=opts.get(CONF_CONSIDER_HOME, DEFAULT_CONSIDER_HOME),
+                ): vol.All(int, vol.Range(min=30, max=1800)),
+                vol.Optional(
+                    CONF_EXCLUDED_MACS,
+                    default=opts.get(CONF_EXCLUDED_MACS, ""),
+                ): str,
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)
