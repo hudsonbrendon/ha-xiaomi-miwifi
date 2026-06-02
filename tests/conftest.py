@@ -10,13 +10,13 @@ def auto_enable_custom_integrations(enable_custom_integrations):
     yield
 
 
-def make_status(online: bool = True) -> MiWiFiStatus:
+def make_status(online: bool = True, *, mac: str = "28:D1:27:9F:4C:14") -> MiWiFiStatus:
     return MiWiFiStatus(
         online=online,
         hardware="RM1800",
         firmware_version="1.0.394",
         serial="SN1",
-        mac="28:D1:27:9F:4C:14",
+        mac=mac,
         client_count=90,
         mesh_node_count=2,
         clients_24g=69,

@@ -228,3 +228,49 @@ async def test_reconfigure_flow_updates_host_and_password(hass):
     assert result2["reason"] == "reconfigure_successful"
     assert entry.data[CONF_HOST] == "192.168.31.2"
     assert entry.data[CONF_PASSWORD] == "new"
+
+
+async def test_integration_discovery_reuses_password(hass):
+    from homeassistant.config_entries import SOURCE_INTEGRATION_DISCOVERY
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+    # an existing gateway entry whose password the leaf can reuse
+    MockConfigEntry(
+        domain=DOMAIN,
+        unique_id="28:d1:27:9f:4c:14",
+        data={
+            CONF_NAME: "GW",
+            CONF_HOST: "192.168.31.1",
+            CONF_PASSWORD: "foco2021",
+        },
+    ).add_to_hass(hass)
+
+    with patch(
+        "custom_components.xiaomi_miwifi.config_flow.MiWiFiClient"
+    ) as mc, patch(
+        "custom_components.xiaomi_miwifi.config_flow.async_get_clientsession",
+        MagicMock(),
+    ), patch(
+        "custom_components.xiaomi_miwifi.async_setup_entry",
+        AsyncMock(return_value=True),
+    ):
+        inst = mc.return_value
+        inst.async_login = AsyncMock(return_value="tok")
+        inst.async_get_status = AsyncMock(
+            return_value=make_status(True, mac="8c:de:f9:93:c5:4c")
+        )
+        inst.async_close = AsyncMock()
+        result = await hass.config_entries.flow.async_init(
+            DOMAIN,
+            context={"source": SOURCE_INTEGRATION_DISCOVERY},
+            data={
+                CONF_HOST: "192.168.31.215",
+                "name": "Leaf",
+                "hardware": "RM1800",
+                "parent_mac": "28:D1:27:9F:4C:14",
+            },
+        )
+    # password was reused -> entry created without prompting
+    assert result["type"] == FlowResultType.CREATE_ENTRY
+    assert result["result"].data[CONF_HOST] == "192.168.31.215"
+    assert result["result"].data[CONF_PASSWORD] == "foco2021"

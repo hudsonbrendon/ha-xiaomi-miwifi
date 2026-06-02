@@ -44,6 +44,9 @@ class XiaomiMiWiFiConfigFlow(ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    _discovered: dict[str, Any]
+    _parent_mac: str | None = None
+
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -73,6 +76,78 @@ class XiaomiMiWiFiConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user", data_schema=USER_SCHEMA, errors=errors
         )
+
+    async def async_step_integration_discovery(
+        self, discovery_info: dict[str, Any]
+    ) -> ConfigFlowResult:
+        host = discovery_info[CONF_HOST]
+        self._async_abort_entries_match({CONF_HOST: host})
+        self._discovered = {
+            CONF_HOST: host,
+            CONF_NAME: discovery_info.get("name") or DEFAULT_NAME,
+        }
+        self._parent_mac = discovery_info.get("parent_mac")
+        self.context["title_placeholders"] = {"name": self._discovered[CONF_NAME]}
+        return await self.async_step_discovery_confirm()
+
+    def _known_passwords(self) -> list[str]:
+        seen: list[str] = []
+        for entry in self._async_current_entries():
+            pwd = entry.data.get(CONF_PASSWORD)
+            if pwd and pwd not in seen:
+                seen.append(pwd)
+        return seen
+
+    async def _validate(self, host: str, password: str):
+        """Return MiWiFiStatus on success or None on failure."""
+        session = async_get_clientsession(self.hass)
+        client = MiWiFiClient(host, password=password, session=session)
+        try:
+            await client.async_login()
+            return await client.async_get_status()
+        except (MiWiFiAuthError, MiWiFiConnectionError):
+            return None
+
+    async def _create_discovered(self, password: str, status) -> ConfigFlowResult:
+        await self.async_set_unique_id(format_mac(status.mac))
+        self._abort_if_unique_id_configured(
+            updates={CONF_HOST: self._discovered[CONF_HOST]}
+        )
+        return self.async_create_entry(
+            title=self._discovered[CONF_NAME],
+            data={
+                CONF_NAME: self._discovered[CONF_NAME],
+                CONF_HOST: self._discovered[CONF_HOST],
+                CONF_PASSWORD: password,
+            },
+        )
+
+    async def async_step_discovery_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        errors: dict[str, str] = {}
+        if user_input is None:
+            for pwd in self._known_passwords():
+                status = await self._validate(self._discovered[CONF_HOST], pwd)
+                if status is not None:
+                    return await self._create_discovered(pwd, status)
+            return self.async_show_form(
+                step_id="discovery_confirm",
+                data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}),
+                description_placeholders={"host": self._discovered[CONF_HOST]},
+            )
+        status = await self._validate(
+            self._discovered[CONF_HOST], user_input[CONF_PASSWORD]
+        )
+        if status is None:
+            errors["base"] = "invalid_auth"
+            return self.async_show_form(
+                step_id="discovery_confirm",
+                data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}),
+                description_placeholders={"host": self._discovered[CONF_HOST]},
+                errors=errors,
+            )
+        return await self._create_discovered(user_input[CONF_PASSWORD], status)
 
     async def async_step_reauth(
         self, entry_data: dict[str, Any]
