@@ -214,23 +214,17 @@ class XiaomiMiWiFiConfigFlow(ConfigFlow, domain=DOMAIN):
             )
             try:
                 await client.async_login()
+                status = await client.async_get_status()
             except MiWiFiAuthError:
                 errors["base"] = "invalid_auth"
             except MiWiFiConnectionError:
                 errors["base"] = "cannot_connect"
             else:
-                await self.async_set_unique_id(user_input[CONF_HOST])
-                for other in self._async_current_entries():
-                    if (
-                        other.entry_id != entry.entry_id
-                        and other.unique_id == user_input[CONF_HOST]
-                    ):
-                        return self.async_abort(reason="already_configured")
+                await self.async_set_unique_id(format_mac(status.mac))
+                self._abort_if_unique_id_mismatch()
                 return self.async_update_reload_and_abort(
                     entry,
-                    unique_id=user_input[CONF_HOST],
-                    data={
-                        **entry.data,
+                    data_updates={
                         CONF_HOST: user_input[CONF_HOST],
                         CONF_PASSWORD: user_input[CONF_PASSWORD],
                     },

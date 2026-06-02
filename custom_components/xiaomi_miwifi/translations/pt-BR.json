@@ -38,7 +38,8 @@
     "abort": {
       "already_configured": "Este roteador já está configurado",
       "reauth_successful": "Reautenticação realizada com sucesso",
-      "reconfigure_successful": "Reconfiguração realizada com sucesso"
+      "reconfigure_successful": "Reconfiguração realizada com sucesso",
+      "unique_id_mismatch": "O novo host aponta para um roteador diferente. A reconfiguração deve manter o mesmo roteador físico."
     }
   },
   "options": {

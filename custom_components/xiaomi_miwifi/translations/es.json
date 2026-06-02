@@ -38,7 +38,8 @@
     "abort": {
       "already_configured": "Este router ya está configurado",
       "reauth_successful": "La reautenticación se realizó correctamente",
-      "reconfigure_successful": "La reconfiguración se realizó correctamente"
+      "reconfigure_successful": "La reconfiguración se realizó correctamente",
+      "unique_id_mismatch": "El nuevo host apunta a un router diferente. La reconfiguración debe mantener el mismo router físico."
     }
   },
   "options": {

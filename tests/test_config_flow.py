@@ -198,7 +198,7 @@ async def test_reconfigure_flow_updates_host_and_password(hass):
 
     entry = MockConfigEntry(
         domain=DOMAIN,
-        unique_id="192.168.31.1",
+        unique_id="28:d1:27:9f:4c:14",
         data={
             CONF_NAME: "Casa",
             CONF_HOST: "192.168.31.1",
@@ -217,6 +217,7 @@ async def test_reconfigure_flow_updates_host_and_password(hass):
     ):
         inst = mc.return_value
         inst.async_login = AsyncMock(return_value="tok")
+        inst.async_get_status = AsyncMock(return_value=make_status(True))
         inst.async_close = AsyncMock()
         result = await entry.start_reconfigure_flow(hass)
         assert result["type"] == FlowResultType.FORM
@@ -227,6 +228,46 @@ async def test_reconfigure_flow_updates_host_and_password(hass):
     assert result2["type"] == FlowResultType.ABORT
     assert result2["reason"] == "reconfigure_successful"
     assert entry.data[CONF_HOST] == "192.168.31.2"
+    assert entry.data[CONF_PASSWORD] == "new"
+
+
+async def test_reconfigure_flow_keeps_mac_unique_id(hass):
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        unique_id="28:d1:27:9f:4c:14",
+        data={
+            CONF_NAME: "Casa",
+            CONF_HOST: "192.168.31.1",
+            CONF_PASSWORD: "old",
+        },
+    )
+    entry.add_to_hass(hass)
+    with patch(
+        "custom_components.xiaomi_miwifi.config_flow.MiWiFiClient"
+    ) as mc, patch(
+        "custom_components.xiaomi_miwifi.config_flow.async_get_clientsession",
+        MagicMock(),
+    ), patch(
+        "custom_components.xiaomi_miwifi.async_setup_entry",
+        AsyncMock(return_value=True),
+    ):
+        inst = mc.return_value
+        inst.async_login = AsyncMock(return_value="tok")
+        # same physical router -> same MAC reported by the status call
+        inst.async_get_status = AsyncMock(return_value=make_status(True))
+        inst.async_close = AsyncMock()
+        result = await entry.start_reconfigure_flow(hass)
+        result2 = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            {CONF_HOST: "192.168.31.50", CONF_PASSWORD: "new"},
+        )
+    assert result2["type"] == FlowResultType.ABORT
+    assert result2["reason"] == "reconfigure_successful"
+    # the MAC-based unique_id must be preserved across reconfigure
+    assert entry.unique_id == "28:d1:27:9f:4c:14"
+    assert entry.data[CONF_HOST] == "192.168.31.50"
     assert entry.data[CONF_PASSWORD] == "new"
 
 
