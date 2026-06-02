@@ -85,6 +85,35 @@ def test_uptime_sensor_reports_last_boot_timestamp():
     assert sensor._attr_unique_id == "e1_wan_uptime"
 
 
+def test_uptime_sensor_is_stable_across_polls(monkeypatch):
+    from datetime import UTC, datetime, timedelta
+
+    from custom_components.xiaomi_miwifi import sensor as sensor_module
+
+    status = make_status(True)
+    coordinator = SimpleNamespace(
+        data=status,
+        last_update_success=True,
+        client=SimpleNamespace(host="1.2.3.4"),
+    )
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    sensor = MiWiFiUptimeSensor(coordinator, entry)
+
+    # Two polls with the SAME wan_uptime but utcnow advanced by a few seconds
+    # must collapse to the same minute-quantized timestamp (no per-poll jitter).
+    base = datetime(2026, 6, 1, 12, 0, 5, tzinfo=UTC)
+    monkeypatch.setattr(sensor_module.dt_util, "utcnow", lambda: base)
+    first = sensor.native_value
+    monkeypatch.setattr(
+        sensor_module.dt_util, "utcnow", lambda: base + timedelta(seconds=7)
+    )
+    second = sensor.native_value
+
+    assert first == second
+    assert first.second == 0
+    assert first.microsecond == 0
+
+
 def test_mesh_node_ip_sensor():
     status = make_status(True)
     coordinator = SimpleNamespace(data=status, last_update_success=True)

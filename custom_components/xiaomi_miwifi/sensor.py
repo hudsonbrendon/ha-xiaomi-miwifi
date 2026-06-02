@@ -217,7 +217,8 @@ class MiWiFiUptimeSensor(XiaomiMiWiFiEntity, SensorEntity):
         uptime = self.coordinator.data.wan_uptime
         if not uptime:
             return None
-        return dt_util.utcnow() - timedelta(seconds=uptime)
+        raw = dt_util.utcnow() - timedelta(seconds=uptime)
+        return raw.replace(second=0, microsecond=0)
 
     @property
     def available(self) -> bool:
