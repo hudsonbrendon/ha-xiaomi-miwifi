@@ -318,14 +318,14 @@ async def test_integration_discovery_reuses_password(hass):
 
 
 async def test_dhcp_discovery_starts_flow(hass):
+    from types import SimpleNamespace
+
     from homeassistant.config_entries import SOURCE_DHCP
 
-    try:
-        from homeassistant.helpers.service_info.dhcp import DhcpServiceInfo
-    except ImportError:  # HA < 2025.1
-        from homeassistant.components.dhcp import DhcpServiceInfo
-
-    info = DhcpServiceInfo(
+    # async_step_dhcp is duck-typed on ip/hostname/macaddress, so a lightweight
+    # stand-in avoids importing the real DhcpServiceInfo, which pulls in
+    # homeassistant.components.dhcp (and aiodhcpwatcher) — not installed in CI.
+    info = SimpleNamespace(
         ip="192.168.31.215", hostname="xiaomi-c54c", macaddress="8cdef993c54c"
     )
     result = await hass.config_entries.flow.async_init(
