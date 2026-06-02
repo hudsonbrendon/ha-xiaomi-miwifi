@@ -72,3 +72,103 @@ luci_request:
       example: "api/misystem/router_info"
       selector:
         text:
+
+run_speed_test:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+
+add_port_forward:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    ip:
+      required: true
+      example: "192.168.31.50"
+      selector:
+        text:
+    name:
+      required: true
+      example: "web"
+      selector:
+        text:
+    proto:
+      required: true
+      example: 1
+      selector:
+        number:
+          min: 1
+          max: 3
+          mode: box
+    source_port:
+      required: true
+      example: 8080
+      selector:
+        number:
+          min: 1
+          max: 65535
+          mode: box
+    dest_port:
+      required: true
+      example: 80
+      selector:
+        number:
+          min: 1
+          max: 65535
+          mode: box
+
+delete_port_forward:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    source_port:
+      required: true
+      example: 8080
+      selector:
+        number:
+          min: 1
+          max: 65535
+          mode: box
+
+set_dmz:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    ip:
+      required: true
+      example: "192.168.31.50"
+      selector:
+        text:
+
+clear_dmz:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+
+set_ddns:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: xiaomi_miwifi
+    enabled:
+      required: true
+      example: true
+      selector:
+        boolean:

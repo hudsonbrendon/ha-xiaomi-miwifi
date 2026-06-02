@@ -36,6 +36,12 @@ SERVICE_REMOVE_RESERVATION = "remove_dhcp_reservation"
 SERVICE_BLOCK_DEVICE = "block_device"
 SERVICE_UNBLOCK_DEVICE = "unblock_device"
 SERVICE_LUCI_REQUEST = "luci_request"
+SERVICE_RUN_SPEED_TEST = "run_speed_test"
+SERVICE_ADD_PORT_FORWARD = "add_port_forward"
+SERVICE_DELETE_PORT_FORWARD = "delete_port_forward"
+SERVICE_SET_DMZ = "set_dmz"
+SERVICE_CLEAR_DMZ = "clear_dmz"
+SERVICE_SET_DDNS = "set_ddns"
 
 ADD_RESERVATION_SCHEMA = vol.Schema(
     {
@@ -56,6 +62,29 @@ UNBLOCK_DEVICE_SCHEMA = vol.Schema(
 )
 LUCI_REQUEST_SCHEMA = vol.Schema(
     {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("path"): cv.string}
+)
+ENTRY_ONLY_SCHEMA = vol.Schema({vol.Required(ATTR_ENTRY_ID): cv.string})
+ADD_PORT_FORWARD_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_ENTRY_ID): cv.string,
+        vol.Required("ip"): cv.string,
+        vol.Required("name"): cv.string,
+        vol.Required("proto"): vol.All(int, vol.Range(min=1, max=3)),
+        vol.Required("source_port"): vol.All(int, vol.Range(min=1, max=65535)),
+        vol.Required("dest_port"): vol.All(int, vol.Range(min=1, max=65535)),
+    }
+)
+DELETE_PORT_FORWARD_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_ENTRY_ID): cv.string,
+        vol.Required("source_port"): vol.All(int, vol.Range(min=1, max=65535)),
+    }
+)
+SET_DMZ_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("ip"): cv.string}
+)
+SET_DDNS_SCHEMA = vol.Schema(
+    {vol.Required(ATTR_ENTRY_ID): cv.string, vol.Required("enabled"): cv.boolean}
 )
 
 
@@ -99,6 +128,47 @@ def _register_services(hass: HomeAssistant) -> None:
         coord = _coordinator(call)
         return await coord.client.async_luci_request(call.data["path"])
 
+    async def _run_speed_test(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        await coord.client.async_run_speed_test()
+        await coord.async_request_refresh()
+
+    async def _add_port_forward(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        if not await coord.client.async_add_port_forward(
+            call.data["ip"],
+            call.data["name"],
+            call.data["proto"],
+            call.data["source_port"],
+            call.data["dest_port"],
+        ):
+            raise HomeAssistantError("Failed to add port forward")
+        await coord.async_request_refresh()
+
+    async def _delete_port_forward(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        if not await coord.client.async_delete_port_forward(call.data["source_port"]):
+            raise HomeAssistantError("Failed to delete port forward")
+        await coord.async_request_refresh()
+
+    async def _set_dmz(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        if not await coord.client.async_set_dmz(call.data["ip"]):
+            raise HomeAssistantError("Failed to set DMZ")
+        await coord.async_request_refresh()
+
+    async def _clear_dmz(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        if not await coord.client.async_clear_dmz():
+            raise HomeAssistantError("Failed to clear DMZ")
+        await coord.async_request_refresh()
+
+    async def _set_ddns(call: ServiceCall) -> None:
+        coord = _coordinator(call)
+        if not await coord.client.async_set_ddns(call.data["enabled"]):
+            raise HomeAssistantError("Failed to set DDNS")
+        await coord.async_request_refresh()
+
     hass.services.async_register(
         DOMAIN, SERVICE_ADD_RESERVATION, _add_reservation, ADD_RESERVATION_SCHEMA
     )
@@ -121,6 +191,23 @@ def _register_services(hass: HomeAssistant) -> None:
         LUCI_REQUEST_SCHEMA,
         supports_response=SupportsResponse.ONLY,
     )
+    hass.services.async_register(
+        DOMAIN, SERVICE_RUN_SPEED_TEST, _run_speed_test, ENTRY_ONLY_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_ADD_PORT_FORWARD, _add_port_forward, ADD_PORT_FORWARD_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_DELETE_PORT_FORWARD,
+        _delete_port_forward,
+        DELETE_PORT_FORWARD_SCHEMA,
+    )
+    hass.services.async_register(DOMAIN, SERVICE_SET_DMZ, _set_dmz, SET_DMZ_SCHEMA)
+    hass.services.async_register(
+        DOMAIN, SERVICE_CLEAR_DMZ, _clear_dmz, ENTRY_ONLY_SCHEMA
+    )
+    hass.services.async_register(DOMAIN, SERVICE_SET_DDNS, _set_ddns, SET_DDNS_SCHEMA)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

@@ -78,7 +78,8 @@
       "qos": { "name": "QoS" }
     },
     "button": {
-      "reboot": { "name": "Reiniciar" }
+      "reboot": { "name": "Reiniciar" },
+      "speed_test": { "name": "Executar teste de velocidade" }
     }
   }
 }

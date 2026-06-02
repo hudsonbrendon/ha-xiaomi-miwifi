@@ -19,7 +19,12 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     coordinator: XiaomiMiWiFiCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([MiWiFiRebootButton(coordinator, entry)])
+    async_add_entities(
+        [
+            MiWiFiRebootButton(coordinator, entry),
+            MiWiFiSpeedTestButton(coordinator, entry),
+        ]
+    )
 
 
 class MiWiFiRebootButton(XiaomiMiWiFiEntity, ButtonEntity):
@@ -38,3 +43,22 @@ class MiWiFiRebootButton(XiaomiMiWiFiEntity, ButtonEntity):
     async def async_press(self) -> None:
         if not await self.coordinator.client.async_reboot():
             raise HomeAssistantError("Failed to reboot the router")
+
+
+class MiWiFiSpeedTestButton(XiaomiMiWiFiEntity, ButtonEntity):
+    """Triggers a WAN speed test on the router (briefly saturates the link)."""
+
+    _attr_translation_key = "speed_test"
+    _attr_icon = "mdi:speedometer"
+
+    def __init__(
+        self,
+        coordinator: XiaomiMiWiFiCoordinator,
+        entry: ConfigEntry,
+    ) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_unique_id = f"{entry.entry_id}_speed_test"
+
+    async def async_press(self) -> None:
+        await self.coordinator.client.async_run_speed_test()
+        await self.coordinator.async_request_refresh()

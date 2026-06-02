@@ -78,7 +78,8 @@
       "qos": { "name": "QoS" }
     },
     "button": {
-      "reboot": { "name": "Reboot" }
+      "reboot": { "name": "Reboot" },
+      "speed_test": { "name": "Run speed test" }
     }
   },
   "services": {
@@ -122,6 +123,56 @@
       "fields": {
         "entry_id": { "name": "Router", "description": "Target router." },
         "path": { "name": "API path", "description": "LuCI path, e.g. api/misystem/router_info." }
+      }
+    },
+    "run_speed_test": {
+      "name": "Run speed test",
+      "description": "Trigger a WAN speed test on the router. Briefly saturates the connection.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." }
+      }
+    },
+    "add_port_forward": {
+      "name": "Add port forward",
+      "description": "Add a single-port forwarding rule and apply it.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "ip": { "name": "Internal IP", "description": "LAN host to forward to." },
+        "name": { "name": "Name", "description": "Rule label." },
+        "proto": { "name": "Protocol", "description": "1=TCP, 2=UDP, 3=TCP+UDP." },
+        "source_port": { "name": "External port", "description": "WAN-side port." },
+        "dest_port": { "name": "Internal port", "description": "LAN-side port." }
+      }
+    },
+    "delete_port_forward": {
+      "name": "Delete port forward",
+      "description": "Delete a port forwarding rule by its external port and apply.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "source_port": { "name": "External port", "description": "WAN-side port of the rule to delete." }
+      }
+    },
+    "set_dmz": {
+      "name": "Set DMZ",
+      "description": "Forward all unmatched WAN traffic to a single LAN host.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "ip": { "name": "DMZ host IP", "description": "LAN host to expose." }
+      }
+    },
+    "clear_dmz": {
+      "name": "Clear DMZ",
+      "description": "Disable DMZ forwarding.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." }
+      }
+    },
+    "set_ddns": {
+      "name": "Set DDNS",
+      "description": "Enable or disable dynamic DNS on the router.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Target router." },
+        "enabled": { "name": "Enabled", "description": "Turn DDNS on or off." }
       }
     }
   }

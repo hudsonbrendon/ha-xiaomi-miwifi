@@ -259,6 +259,20 @@ def test_country_code_sensor():
     assert by_key["country_code"].value_fn(make_status(True)) == "CN"
 
 
+async def test_speed_test_button_calls_client():
+    from custom_components.xiaomi_miwifi.button import MiWiFiSpeedTestButton
+
+    coord = SimpleNamespace(
+        data=make_status(True), last_update_success=True,
+        client=AsyncMock(), async_request_refresh=AsyncMock(),
+    )
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    btn = MiWiFiSpeedTestButton(coord, entry)
+    await btn.async_press()
+    coord.client.async_run_speed_test.assert_awaited_once()
+    coord.async_request_refresh.assert_awaited_once()
+
+
 async def test_qos_switch_on_off():
     coord = SimpleNamespace(
         data=make_status(True), last_update_success=True,
