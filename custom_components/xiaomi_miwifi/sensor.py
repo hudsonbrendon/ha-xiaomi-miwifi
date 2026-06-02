@@ -153,6 +153,21 @@ SENSOR_DESCRIPTIONS: tuple[MiWiFiSensorDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda s: s.firmware_version,
     ),
+    MiWiFiSensorDescription(
+        key="mode",
+        translation_key="mode",
+        icon="mdi:router-wireless-settings",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.mode_name,
+    ),
+    MiWiFiSensorDescription(
+        key="ethernet_ports",
+        translation_key="ethernet_ports",
+        icon="mdi:ethernet",
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.lan_ports_active,
+    ),
 )
 
 

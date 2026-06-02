@@ -42,6 +42,8 @@ def test_sensor_descriptions_cover_expected_keys():
         "channel_24g",
         "channel_5g",
         "firmware_version",
+        "mode",
+        "ethernet_ports",
     }
 
 
@@ -65,6 +67,13 @@ def test_new_wan_and_wifi_sensor_value_fns():
     assert by_key["wan_gateway"].value_fn(status) == "100.107.32.1"
     assert by_key["channel_24g"].value_fn(status) == 6
     assert by_key["channel_5g"].value_fn(status) == 149
+
+
+def test_mode_and_ethernet_sensor_value_fns():
+    status = make_status(True)
+    by_key = {d.key: d for d in SENSOR_DESCRIPTIONS}
+    assert by_key["mode"].value_fn(status) == "Router"
+    assert by_key["ethernet_ports"].value_fn(status) == 1
 
 
 def test_uptime_sensor_reports_last_boot_timestamp():

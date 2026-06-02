@@ -40,6 +40,8 @@ def make_status(online: bool = True) -> MiWiFiStatus:
         encryption_5g="psk2",
         rom_changelog="Bug fixes and stability improvements.",
         rom_latest_version="1.0.400",
+        mode=0,
+        lan_ports=[False, True, False],
         mesh_nodes=[
             MeshNode("Leaf1", "192.168.31.215", "RM1800", "s", 8),
             MeshNode("Leaf2", "192.168.31.156", "RA82", "s", 8),

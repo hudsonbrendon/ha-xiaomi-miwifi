@@ -44,6 +44,8 @@
       "channel_24g": { "name": "Canal 2,4 GHz" },
       "channel_5g": { "name": "Canal 5 GHz" },
       "firmware_version": { "name": "Versão do firmware" },
+      "mode": { "name": "Modo de operação" },
+      "ethernet_ports": { "name": "Portas Ethernet conectadas" },
       "mesh_node_model": { "name": "Modelo" },
       "mesh_node_ip": { "name": "Endereço IP" }
     },
