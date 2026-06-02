@@ -3,17 +3,20 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 
 from homeassistant.components.sensor import (
+    SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfDataRate, UnitOfTime
+from homeassistant.const import UnitOfDataRate, UnitOfInformation
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import dt as dt_util
 
 from xiaomi_miwifi import MiWiFiStatus
 
@@ -82,12 +85,66 @@ SENSOR_DESCRIPTIONS: tuple[MiWiFiSensorDescription, ...] = (
         value_fn=lambda s: s.wan_ip,
     ),
     MiWiFiSensorDescription(
-        key="wan_uptime",
-        translation_key="wan_uptime",
-        native_unit_of_measurement=UnitOfTime.SECONDS,
-        icon="mdi:timer-outline",
+        key="wan_download_total",
+        translation_key="wan_download_total",
+        native_unit_of_measurement=UnitOfInformation.BYTES,
+        device_class=SensorDeviceClass.DATA_SIZE,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:download-network",
+        value_fn=lambda s: s.wan_download_total,
+    ),
+    MiWiFiSensorDescription(
+        key="wan_upload_total",
+        translation_key="wan_upload_total",
+        native_unit_of_measurement=UnitOfInformation.BYTES,
+        device_class=SensorDeviceClass.DATA_SIZE,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:upload-network",
+        value_fn=lambda s: s.wan_upload_total,
+    ),
+    MiWiFiSensorDescription(
+        key="wan_max_download",
+        translation_key="wan_max_download",
+        native_unit_of_measurement=UnitOfDataRate.BYTES_PER_SECOND,
+        icon="mdi:download",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda s: s.wan_uptime,
+        value_fn=lambda s: s.wan_max_download,
+    ),
+    MiWiFiSensorDescription(
+        key="wan_max_upload",
+        translation_key="wan_max_upload",
+        native_unit_of_measurement=UnitOfDataRate.BYTES_PER_SECOND,
+        icon="mdi:upload",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.wan_max_upload,
+    ),
+    MiWiFiSensorDescription(
+        key="wan_type",
+        translation_key="wan_type",
+        icon="mdi:wan",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.wan_type,
+    ),
+    MiWiFiSensorDescription(
+        key="wan_gateway",
+        translation_key="wan_gateway",
+        icon="mdi:router-network",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.wan_gateway,
+    ),
+    MiWiFiSensorDescription(
+        key="channel_24g",
+        translation_key="channel_24g",
+        icon="mdi:wifi",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.channel_24g,
+    ),
+    MiWiFiSensorDescription(
+        key="channel_5g",
+        translation_key="channel_5g",
+        icon="mdi:wifi",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.channel_5g,
     ),
     MiWiFiSensorDescription(
         key="firmware_version",
@@ -108,8 +165,10 @@ async def async_setup_entry(
     entities: list[SensorEntity] = [
         MiWiFiSensor(coordinator, entry, desc) for desc in SENSOR_DESCRIPTIONS
     ]
+    entities.append(MiWiFiUptimeSensor(coordinator, entry))
     for node in coordinator.data.mesh_nodes:
         entities.append(MiWiFiMeshNodeStatusSensor(coordinator, entry, node))
+        entities.append(MiWiFiMeshNodeIpSensor(coordinator, entry, node))
     async_add_entities(entities)
 
 
@@ -135,6 +194,55 @@ class MiWiFiSensor(XiaomiMiWiFiEntity, SensorEntity):
     @property
     def available(self) -> bool:
         return super().available and self.coordinator.data.online
+
+
+class MiWiFiUptimeSensor(XiaomiMiWiFiEntity, SensorEntity):
+    """Reports the WAN last-boot timestamp (now - wan_uptime)."""
+
+    _attr_translation_key = "wan_uptime"
+    _attr_icon = "mdi:timer-outline"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(
+        self,
+        coordinator: XiaomiMiWiFiCoordinator,
+        entry: ConfigEntry,
+    ) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_unique_id = f"{entry.entry_id}_wan_uptime"
+
+    @property
+    def native_value(self) -> datetime | None:
+        uptime = self.coordinator.data.wan_uptime
+        if not uptime:
+            return None
+        return dt_util.utcnow() - timedelta(seconds=uptime)
+
+    @property
+    def available(self) -> bool:
+        return super().available and self.coordinator.data.online
+
+
+class MiWiFiMeshNodeIpSensor(XiaomiMeshNodeEntity, SensorEntity):
+    """Reports the IP address of a mesh leaf node."""
+
+    _attr_translation_key = "mesh_node_ip"
+    _attr_icon = "mdi:ip-network"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator, entry, node) -> None:
+        super().__init__(coordinator, entry, node)
+        self._attr_unique_id = f"{entry.entry_id}_node_{node.ip}_ip"
+
+    @property
+    def native_value(self) -> str | None:
+        node = self._current_node()
+        return node.ip if node else None
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._current_node() is not None
 
 
 class MiWiFiMeshNodeStatusSensor(XiaomiMeshNodeEntity, SensorEntity):
