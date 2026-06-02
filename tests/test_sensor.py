@@ -46,6 +46,12 @@ def test_sensor_descriptions_cover_expected_keys():
         "mode",
         "ethernet_ports",
         "country_code",
+        "speedtest_download",
+        "speedtest_upload",
+        "wan_dns",
+        "port_forwards",
+        "dhcp_leasetime",
+        "timezone",
     }
 
 
@@ -137,7 +143,7 @@ def test_mesh_node_ip_sensor():
 
 def test_binary_sensor_descriptions():
     by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
-    assert set(by_key) == {"wan_link", "led"}
+    assert set(by_key) == {"wan_link", "led", "dmz", "ddns"}
     status = make_status(True)
     assert by_key["wan_link"].value_fn(status) is True
     assert by_key["led"].value_fn(status) is True
@@ -227,6 +233,25 @@ async def test_radio_switch_turn_off_raises_on_failure(hass):
     with pytest.raises(HomeAssistantError):
         await switch.async_turn_off()
     assert switch._attr_is_on is True
+
+
+def test_v05_sensor_value_fns():
+    by_key = {d.key: d for d in SENSOR_DESCRIPTIONS}
+    s = make_status(True)
+    assert by_key["speedtest_download"].value_fn(s) == 865.28
+    assert by_key["speedtest_upload"].value_fn(s) == 1553.92
+    assert by_key["wan_dns"].value_fn(s) == "1.1.1.1, 8.8.8.8"
+    assert by_key["port_forwards"].value_fn(s) == 2
+    assert by_key["dhcp_leasetime"].value_fn(s) == 720
+    assert by_key["timezone"].value_fn(s) == "CST-8"
+
+
+def test_v05_binary_sensor_descriptions():
+    from custom_components.xiaomi_miwifi.binary_sensor import BINARY_SENSOR_DESCRIPTIONS
+    by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
+    s = make_status(True)
+    assert by_key["dmz"].value_fn(s) is True
+    assert by_key["ddns"].value_fn(s) is False
 
 
 def test_country_code_sensor():

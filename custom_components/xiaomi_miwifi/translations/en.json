@@ -48,12 +48,20 @@
       "ethernet_ports": { "name": "Ethernet ports connected" },
       "mesh_node_model": { "name": "Model" },
       "mesh_node_ip": { "name": "IP address" },
-      "country_code": { "name": "Country code" }
+      "country_code": { "name": "Country code" },
+      "speedtest_download": { "name": "Speed test download" },
+      "speedtest_upload": { "name": "Speed test upload" },
+      "wan_dns": { "name": "WAN DNS" },
+      "port_forwards": { "name": "Port forwarding rules" },
+      "dhcp_leasetime": { "name": "DHCP lease time" },
+      "timezone": { "name": "Timezone" }
     },
     "binary_sensor": {
       "wan_link": { "name": "WAN link" },
       "led": { "name": "Status LED" },
-      "mesh_node_online": { "name": "Online" }
+      "mesh_node_online": { "name": "Online" },
+      "dmz": { "name": "DMZ" },
+      "ddns": { "name": "DDNS" }
     },
     "update": {
       "firmware": { "name": "Firmware" }

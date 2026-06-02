@@ -12,7 +12,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfDataRate, UnitOfInformation
+from homeassistant.const import UnitOfDataRate, UnitOfInformation, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -174,6 +174,50 @@ SENSOR_DESCRIPTIONS: tuple[MiWiFiSensorDescription, ...] = (
         icon="mdi:earth",
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda s: s.country_code,
+    ),
+    MiWiFiSensorDescription(
+        key="speedtest_download",
+        translation_key="speedtest_download",
+        native_unit_of_measurement="Mbit/s",
+        icon="mdi:download-network",
+        value_fn=lambda s: s.speedtest_download,
+    ),
+    MiWiFiSensorDescription(
+        key="speedtest_upload",
+        translation_key="speedtest_upload",
+        native_unit_of_measurement="Mbit/s",
+        icon="mdi:upload-network",
+        value_fn=lambda s: s.speedtest_upload,
+    ),
+    MiWiFiSensorDescription(
+        key="wan_dns",
+        translation_key="wan_dns",
+        icon="mdi:dns",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: ", ".join(s.wan_dns),
+    ),
+    MiWiFiSensorDescription(
+        key="port_forwards",
+        translation_key="port_forwards",
+        icon="mdi:lan-connect",
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.port_forward_count,
+    ),
+    MiWiFiSensorDescription(
+        key="dhcp_leasetime",
+        translation_key="dhcp_leasetime",
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        icon="mdi:timer-cog-outline",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.dhcp_leasetime,
+    ),
+    MiWiFiSensorDescription(
+        key="timezone",
+        translation_key="timezone",
+        icon="mdi:map-clock",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.timezone,
     ),
 )
 
