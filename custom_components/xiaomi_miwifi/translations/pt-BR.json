@@ -97,5 +97,15 @@
       "devices": "Dispositivos conectados",
       "mesh_nodes": "Nós mesh"
     }
+  },
+  "issues": {
+    "firmware_update_available": {
+      "title": "Atualização de firmware disponível",
+      "description": "Uma nova versão de firmware ({version}) está disponível para o seu roteador Xiaomi MiWiFi. Atualize pela interface web do roteador ou pelo app Mi WiFi."
+    },
+    "unsupported_router": {
+      "title": "Modelo de roteador não suportado",
+      "description": "O hardware do seu roteador ({hardware}) não está na lista de modelos suportados. Algumas entidades podem estar ausentes ou reportar valores incorretos."
+    }
   }
 }

@@ -42,6 +42,7 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
             update_interval=timedelta(seconds=scan_interval),
         )
         self.client = client
+        self.entry_id: str | None = None
         self.clients: list[ClientDevice] = []
         self.channels_24g: list[str] = []
         self.channels_5g: list[str] = []
@@ -97,4 +98,8 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
             self.clients = []
         if status.online:
             self._process_device_events()
+            if self.entry_id:
+                from .repairs import async_check_issues
+
+                async_check_issues(self.hass, self.entry_id, self)
         return status

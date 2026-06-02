@@ -98,6 +98,16 @@
       "mesh_nodes": "Mesh nodes"
     }
   },
+  "issues": {
+    "firmware_update_available": {
+      "title": "Router firmware update available",
+      "description": "A new firmware version ({version}) is available for your Xiaomi MiWiFi router. Update it from the router's web interface or the Mi WiFi app."
+    },
+    "unsupported_router": {
+      "title": "Unsupported router model",
+      "description": "Your router hardware ({hardware}) is not in the list of supported models. Some entities may be missing or report incorrect values."
+    }
+  },
   "services": {
     "add_dhcp_reservation": {
       "name": "Add DHCP reservation",

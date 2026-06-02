@@ -223,6 +223,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
     scan_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     coordinator = XiaomiMiWiFiCoordinator(hass, client, scan_interval)
+    coordinator.entry_id = entry.entry_id
     coordinator.consider_home = entry.options.get(
         CONF_CONSIDER_HOME, DEFAULT_CONSIDER_HOME
     )
