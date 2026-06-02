@@ -36,6 +36,17 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
         )
         self.client = client
         self.clients: list[ClientDevice] = []
+        self.channels_24g: list[str] = []
+        self.channels_5g: list[str] = []
+
+    async def async_load_channels(self) -> None:
+        """Fetch the available channel lists once (they don't change)."""
+        try:
+            self.channels_24g = await self.client.async_get_available_channels(1)
+            self.channels_5g = await self.client.async_get_available_channels(2)
+        except MiWiFiConnectionError:
+            self.channels_24g = []
+            self.channels_5g = []
 
     async def _async_update_data(self) -> MiWiFiStatus:
         try:
