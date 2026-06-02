@@ -57,6 +57,12 @@
     "update": {
       "firmware": { "name": "Firmware" }
     },
+    "select": {
+      "channel_24g": { "name": "Canal 2,4 GHz" },
+      "channel_5g": { "name": "Canal 5 GHz" },
+      "txpower_24g": { "name": "Potência do sinal 2,4 GHz" },
+      "txpower_5g": { "name": "Potência do sinal 5 GHz" }
+    },
     "switch": {
       "wifi_5g": { "name": "Wi-Fi 5 GHz" },
       "wifi_24g": { "name": "Wi-Fi 2,4 GHz" }
