@@ -15,7 +15,13 @@ from xiaomi_miwifi import (
     MiWiFiStatus,
 )
 
-from .const import DOMAIN
+from .const import (
+    DEFAULT_CONSIDER_HOME,
+    DOMAIN,
+    EVENT_DEVICE_CONNECTED,
+    EVENT_DEVICE_DISCONNECTED,
+    EVENT_NEW_DEVICE,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -39,6 +45,11 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
         self.clients: list[ClientDevice] = []
         self.channels_24g: list[str] = []
         self.channels_5g: list[str] = []
+        self.consider_home: int = DEFAULT_CONSIDER_HOME
+        self.excluded_macs: set[str] = set()
+        self.last_seen: dict[str, object] = {}
+        self._known_online: set[str] = set()
+        self._known_macs: set[str] = set()
 
     async def async_load_channels(self) -> None:
         """Fetch the available channel lists once (they don't change)."""
@@ -48,6 +59,30 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
         except MiWiFiError:
             self.channels_24g = []
             self.channels_5g = []
+
+    def _process_device_events(self) -> None:
+        from homeassistant.util import dt as dt_util
+
+        now = dt_util.utcnow()
+        online_now = {
+            c.mac.upper() for c in self.clients
+            if c.online and c.mac.upper() not in self.excluded_macs
+        }
+        for c in self.clients:
+            mac = c.mac.upper()
+            if mac in self.excluded_macs:
+                continue
+            payload = {"mac": c.mac, "name": c.name, "ip": c.ip}
+            if mac not in self._known_macs:
+                self._known_macs.add(mac)
+                self.hass.bus.async_fire(EVENT_NEW_DEVICE, payload)
+            if c.online and mac not in self._known_online:
+                self.hass.bus.async_fire(EVENT_DEVICE_CONNECTED, payload)
+            if c.online:
+                self.last_seen[mac] = now
+        for mac in self._known_online - online_now:
+            self.hass.bus.async_fire(EVENT_DEVICE_DISCONNECTED, {"mac": mac})
+        self._known_online = online_now
 
     async def _async_update_data(self) -> MiWiFiStatus:
         try:
@@ -60,4 +95,6 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
         except MiWiFiConnectionError as err:
             _LOGGER.debug("MiWiFi client list fetch failed: %s", err)
             self.clients = []
+        if status.online:
+            self._process_device_events()
         return status

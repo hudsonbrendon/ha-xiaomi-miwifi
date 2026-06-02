@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock
 
 from homeassistant.core import HomeAssistant
+from xiaomi_miwifi import ClientDevice
 
 from custom_components.xiaomi_miwifi.coordinator import (
     XiaomiMiWiFiCoordinator,
@@ -55,3 +56,50 @@ async def test_coordinator_offline_is_not_fatal(hass: HomeAssistant):
     coordinator = XiaomiMiWiFiCoordinator(hass, client, 30)
     await coordinator.async_refresh()
     assert coordinator.data.online is False
+
+
+def _client_dev(mac, name="d", online=True):
+    return ClientDevice(name=name, mac=mac, ip="192.168.31.9", online=online,
+                        parent="", is_router=False)
+
+
+async def test_coordinator_fires_connect_and_new_device_events(hass):
+    from custom_components.xiaomi_miwifi.const import (
+        EVENT_DEVICE_CONNECTED,
+        EVENT_NEW_DEVICE,
+    )
+
+    events = []
+    hass.bus.async_listen(
+        EVENT_NEW_DEVICE, lambda e: events.append(("new", e.data))
+    )
+    hass.bus.async_listen(
+        EVENT_DEVICE_CONNECTED, lambda e: events.append(("conn", e.data))
+    )
+
+    client = AsyncMock()
+    client.async_get_status.return_value = make_status(True)
+    client.async_get_clients.return_value = [_client_dev("AA:BB:CC:DD:EE:01")]
+    coordinator = XiaomiMiWiFiCoordinator(hass, client, 30)
+    await coordinator.async_refresh()          # first sight -> new + connected
+    await hass.async_block_till_done()
+    kinds = {k for k, _ in events}
+    assert "new" in kinds and "conn" in kinds
+
+
+async def test_coordinator_fires_disconnect_event(hass):
+    from custom_components.xiaomi_miwifi.const import EVENT_DEVICE_DISCONNECTED
+
+    seen = []
+    hass.bus.async_listen(EVENT_DEVICE_DISCONNECTED, lambda e: seen.append(e.data))
+    client = AsyncMock()
+    client.async_get_status.return_value = make_status(True)
+    client.async_get_clients.side_effect = [
+        [_client_dev("AA:BB:CC:DD:EE:01")],   # online
+        [],                                    # gone
+    ]
+    coordinator = XiaomiMiWiFiCoordinator(hass, client, 30)
+    await coordinator.async_refresh()
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert any(d["mac"] == "AA:BB:CC:DD:EE:01" for d in seen)
