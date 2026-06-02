@@ -1,0 +1,226 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Xiaomi MiWiFi",
+        "data": {
+          "name": "Nombre",
+          "host": "Host / IP",
+          "password": "Contraseña de administrador del router"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Volver a autenticar Xiaomi MiWiFi",
+        "description": "El router rechazó la contraseña guardada. Introduce la contraseña de administrador actual.",
+        "data": {
+          "password": "Contraseña de administrador del router"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurar Xiaomi MiWiFi",
+        "data": {
+          "host": "Host / IP",
+          "password": "Contraseña de administrador del router"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "No se pudo conectar al router",
+      "invalid_auth": "Contraseña del router no válida"
+    },
+    "abort": {
+      "already_configured": "Este router ya está configurado",
+      "reauth_successful": "La reautenticación se realizó correctamente",
+      "reconfigure_successful": "La reconfiguración se realizó correctamente"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Intervalo de actualización (segundos)",
+          "consider_home": "Intervalo de considerar-en-casa (segundos)",
+          "excluded_macs": "Direcciones MAC excluidas (separadas por comas)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "client_count": { "name": "Dispositivos conectados" },
+      "clients_24g": { "name": "Clientes 2,4 GHz" },
+      "clients_5g": { "name": "Clientes 5 GHz" },
+      "mesh_node_count": { "name": "Nodos mesh" },
+      "download_speed": { "name": "Velocidad de descarga" },
+      "upload_speed": { "name": "Velocidad de subida" },
+      "wan_ip": { "name": "IP WAN" },
+      "wan_uptime": { "name": "WAN conectada desde" },
+      "wan_download_total": { "name": "Descarga total WAN" },
+      "wan_upload_total": { "name": "Subida total WAN" },
+      "wan_max_download": { "name": "Velocidad máxima de descarga WAN" },
+      "wan_max_upload": { "name": "Velocidad máxima de subida WAN" },
+      "wan_type": { "name": "Tipo de WAN" },
+      "wan_gateway": { "name": "Puerta de enlace WAN" },
+      "channel_24g": { "name": "Canal 2,4 GHz" },
+      "channel_5g": { "name": "Canal 5 GHz" },
+      "firmware_version": { "name": "Versión de firmware" },
+      "mode": { "name": "Modo de funcionamiento" },
+      "ethernet_ports": { "name": "Puertos Ethernet conectados" },
+      "mesh_node_model": { "name": "Modelo" },
+      "mesh_node_ip": { "name": "Dirección IP" },
+      "country_code": { "name": "Código de país" },
+      "speedtest_download": { "name": "Descarga (test de velocidad)" },
+      "speedtest_upload": { "name": "Subida (test de velocidad)" },
+      "wan_dns": { "name": "DNS WAN" },
+      "port_forwards": { "name": "Reglas de redirección de puertos" },
+      "dhcp_leasetime": { "name": "Tiempo de concesión DHCP" },
+      "timezone": { "name": "Zona horaria" }
+    },
+    "binary_sensor": {
+      "wan_link": { "name": "Enlace WAN" },
+      "led": { "name": "LED de estado" },
+      "mesh_node_online": { "name": "En línea" },
+      "dmz": { "name": "DMZ" },
+      "ddns": { "name": "DDNS" },
+      "ipv6": { "name": "IPv6" }
+    },
+    "update": {
+      "firmware": { "name": "Firmware" }
+    },
+    "select": {
+      "channel_24g": { "name": "Canal 2,4 GHz" },
+      "channel_5g": { "name": "Canal 5 GHz" },
+      "txpower_24g": { "name": "Potencia de señal 2,4 GHz" },
+      "txpower_5g": { "name": "Potencia de señal 5 GHz" }
+    },
+    "switch": {
+      "wifi_5g": { "name": "Wi-Fi 5 GHz" },
+      "wifi_24g": { "name": "Wi-Fi 2,4 GHz" },
+      "qos": { "name": "QoS" }
+    },
+    "button": {
+      "reboot": { "name": "Reiniciar" },
+      "speed_test": { "name": "Ejecutar test de velocidad" }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "device_connected": "Un dispositivo se conectó",
+      "device_disconnected": "Un dispositivo se desconectó",
+      "new_device": "Un nuevo dispositivo se unió"
+    }
+  },
+  "system_health": {
+    "info": {
+      "routers": "Routers",
+      "reachable": "Accesible",
+      "firmware": "Versión de firmware",
+      "devices": "Dispositivos conectados",
+      "mesh_nodes": "Nodos mesh"
+    }
+  },
+  "issues": {
+    "firmware_update_available": {
+      "title": "Actualización de firmware disponible",
+      "description": "Hay una nueva versión de firmware ({version}) disponible para tu router Xiaomi MiWiFi. Actualízalo desde la interfaz web del router o la app Mi WiFi."
+    },
+    "unsupported_router": {
+      "title": "Modelo de router no compatible",
+      "description": "El hardware de tu router ({hardware}) no está en la lista de modelos compatibles. Algunas entidades pueden faltar o mostrar valores incorrectos."
+    }
+  },
+  "services": {
+    "add_dhcp_reservation": {
+      "name": "Añadir reserva DHCP",
+      "description": "Reserva una IP para una dirección MAC.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "mac": { "name": "MAC", "description": "Dirección MAC del dispositivo." },
+        "ip": { "name": "IP", "description": "IP a reservar." },
+        "name": { "name": "Nombre", "description": "Etiqueta de la reserva." }
+      }
+    },
+    "remove_dhcp_reservation": {
+      "name": "Eliminar reserva DHCP",
+      "description": "Elimina una reserva por MAC.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "mac": { "name": "MAC", "description": "Dirección MAC del dispositivo." }
+      }
+    },
+    "block_device": {
+      "name": "Bloquear dispositivo",
+      "description": "Bloquea el acceso de un dispositivo a la red por MAC.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "mac": { "name": "MAC", "description": "Dirección MAC del dispositivo." }
+      }
+    },
+    "unblock_device": {
+      "name": "Desbloquear dispositivo",
+      "description": "Desbloquea por MAC un dispositivo previamente bloqueado.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "mac": { "name": "MAC", "description": "Dirección MAC del dispositivo." }
+      }
+    },
+    "luci_request": {
+      "name": "Petición cruda a la API LuCI",
+      "description": "Realiza un GET de solo lectura a cualquier ruta de la API LuCI de MiWiFi y devuelve el JSON.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "path": { "name": "Ruta de la API", "description": "Ruta LuCI, p. ej. api/misystem/router_info." }
+      }
+    },
+    "run_speed_test": {
+      "name": "Ejecutar test de velocidad",
+      "description": "Inicia un test de velocidad WAN en el router. Satura brevemente la conexión.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." }
+      }
+    },
+    "add_port_forward": {
+      "name": "Añadir redirección de puerto",
+      "description": "Añade una regla de redirección de un puerto y la aplica.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "ip": { "name": "IP interna", "description": "Host LAN al que redirigir." },
+        "name": { "name": "Nombre", "description": "Etiqueta de la regla." },
+        "proto": { "name": "Protocolo", "description": "1=TCP, 2=UDP, 3=TCP+UDP." },
+        "source_port": { "name": "Puerto externo", "description": "Puerto del lado WAN." },
+        "dest_port": { "name": "Puerto interno", "description": "Puerto del lado LAN." }
+      }
+    },
+    "delete_port_forward": {
+      "name": "Eliminar redirección de puerto",
+      "description": "Elimina una regla de redirección por su puerto externo y la aplica.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "source_port": { "name": "Puerto externo", "description": "Puerto del lado WAN de la regla a eliminar." }
+      }
+    },
+    "set_dmz": {
+      "name": "Configurar DMZ",
+      "description": "Redirige todo el tráfico WAN no coincidente a un único host LAN.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "ip": { "name": "IP del host DMZ", "description": "Host LAN a exponer." }
+      }
+    },
+    "clear_dmz": {
+      "name": "Desactivar DMZ",
+      "description": "Desactiva la redirección DMZ.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." }
+      }
+    },
+    "set_ddns": {
+      "name": "Configurar DDNS",
+      "description": "Activa o desactiva el DNS dinámico en el router.",
+      "fields": {
+        "entry_id": { "name": "Router", "description": "Router de destino." },
+        "enabled": { "name": "Activado", "description": "Activar o desactivar DDNS." }
+      }
+    }
+  }
+}

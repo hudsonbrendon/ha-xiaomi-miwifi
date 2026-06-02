@@ -1,11 +1,19 @@
-# Xiaomi MiWiFi for Home Assistant
+<p align="center">
+  <img src="https://raw.githubusercontent.com/hudsonbrendon/ha-xiaomi-miwifi/main/custom_components/xiaomi_miwifi/brand/logo%402x.png" alt="Mi WiFi" width="280">
+</p>
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![Tests](https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/tests.yml/badge.svg)](https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/tests.yml)
-[![Validate](https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/validate.yml/badge.svg)](https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/validate.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<h1 align="center">Xiaomi MiWiFi for Home Assistant</h1>
+
+<p align="center">
+  <a href="https://github.com/hacs/integration"><img src="https://img.shields.io/badge/HACS-Custom-41BDF5.svg" alt="HACS Custom"></a>
+  <a href="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/tests.yml"><img src="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/validate.yml"><img src="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+</p>
 
 Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local LuCI HTTP API. Mesh-aware: the gateway is the hub and each leaf node appears as a child device. Powered by [`python-xiaomi-miwifi`](https://github.com/hudsonbrendon/python-xiaomi-miwifi).
+
+🌐 **Available in English, Português (pt-BR) and Español.**
 
 ## Features
 
@@ -117,12 +125,29 @@ Open the integration's **Configure** dialog to set:
 
 ## Supported routers
 
+~45 Xiaomi / Redmi / Mi router hardware codes are recognized with friendly names (full list in [`routers.py`](https://github.com/hudsonbrendon/python-xiaomi-miwifi/blob/main/src/xiaomi_miwifi/routers.py)), including:
+
 | Hardware | Model |
 |----------|-------|
 | RM1800 | Xiaomi Router AX1800 |
-| RA82 | Xiaomi Router AX3000T |
+| RA82 / RB06 | Xiaomi Router AX3000T |
+| RA72 | Xiaomi Router AX6000 |
+| RA70 | Xiaomi Router AX9000 |
+| RC06 | Redmi Router AX6000 |
+| RD03 | Xiaomi Router AX3000T NE |
+| RB01 | Xiaomi Router BE7000 |
 
-> Open an issue to add yours.
+> Any unlisted model still works with a generic name — open an issue to add yours.
+
+## Languages
+
+The UI is translated into:
+
+- 🇬🇧 English (`en`)
+- 🇧🇷 Português – Brasil (`pt-BR`)
+- 🇪🇸 Español (`es`)
+
+Home Assistant picks the language from your profile automatically. Contributions for more languages are welcome — copy `custom_components/xiaomi_miwifi/translations/en.json` to your locale code and translate the values.
 
 ## Development
 

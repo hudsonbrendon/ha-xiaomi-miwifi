@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here.
 
+## [0.6.1]
+
+### Added
+- Spanish (`es`) translation.
+
+### Changed
+- README: Mi WiFi logo header, languages section, and an up-to-date supported-router list.
+
 ## [0.6.0]
 
 ### Added
