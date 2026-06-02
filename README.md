@@ -13,8 +13,6 @@
 
 Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local LuCI HTTP API. Mesh-aware: the gateway is the hub and each leaf node appears as a child device. Powered by [`python-xiaomi-miwifi`](https://github.com/hudsonbrendon/python-xiaomi-miwifi).
 
-🌐 **Available in English, Português (pt-BR) and Español.**
-
 ## Features
 
 - 📊 Sensors: connected devices, per-band client counts, download/upload speed, WAN IP, WAN connected-since, WAN total download/upload, WAN max speeds, WAN type, WAN gateway, 2.4/5 GHz channel, firmware, mesh node count, operating mode, Ethernet ports connected, speed-test download/upload, WAN DNS, port-forwarding rule count, DHCP lease time, timezone
@@ -125,29 +123,49 @@ Open the integration's **Configure** dialog to set:
 
 ## Supported routers
 
-~45 Xiaomi / Redmi / Mi router hardware codes are recognized with friendly names (full list in [`routers.py`](https://github.com/hudsonbrendon/python-xiaomi-miwifi/blob/main/src/xiaomi_miwifi/routers.py)), including:
+These hardware codes are recognized with friendly names; any unlisted model still works with a generic name (open an issue to add yours).
 
 | Hardware | Model |
 |----------|-------|
+| R1D | Xiaomi Mi Router R1D |
+| R2D | Xiaomi Mi Router R2D |
+| R3 | Xiaomi Mi Router 3 |
+| R3G | Xiaomi Mi Router 3G |
+| R3P | Xiaomi Mi Router 3 Pro |
+| R3D | Xiaomi Mi Router HD |
+| R3L | Xiaomi Mi Router 3C |
+| R3A | Xiaomi Mi Router 3A |
+| R4 | Xiaomi Mi Router 4 |
+| R4C / R4CM | Xiaomi Mi Router 4C |
+| R4A / R4AC | Xiaomi Mi Router 4A |
+| R4AV2 | Xiaomi Mi Router 4A v2 |
+| D01 | Xiaomi Mi Router Mesh |
+| R2100 | Xiaomi Mi Router AC2100 |
+| RM2100 | Redmi Router AC2100 |
+| R3600 | Xiaomi AIoT Router AX3600 |
 | RM1800 | Xiaomi Router AX1800 |
-| RA82 / RB06 | Xiaomi Router AX3000T |
+| RA67 | Redmi Router AX5 |
+| R2350 | Xiaomi Mi AIoT Router AC2350 |
+| R1350 | Xiaomi Mi Router 4 Pro |
+| RA69 | Redmi Router AX6 |
 | RA72 | Xiaomi Router AX6000 |
+| RA50 | Redmi Router AX5400 |
 | RA70 | Xiaomi Router AX9000 |
+| CR6606 | Xiaomi Router CR6606 |
+| RA81 | Redmi Router AX3000 |
+| RA80 | Xiaomi Router AX3000 |
+| RB03 | Redmi Router AX6000 |
+| RA71 | Redmi Router AX1800 |
+| RB01 | Xiaomi Router BE7000 |
+| RA82 / RB06 | Xiaomi Router AX3000T |
+| CR8808 | Xiaomi Router CR8808 |
+| RB02 | Redmi Router BE5000 |
+| RB04 | Xiaomi Router BE3600 |
+| RA74 | Xiaomi Mesh System AX3000 |
+| RB08 | Xiaomi Router BE3600 2.5G |
+| CB0401 | Xiaomi 5G CPE Pro |
 | RC06 | Redmi Router AX6000 |
 | RD03 | Xiaomi Router AX3000T NE |
-| RB01 | Xiaomi Router BE7000 |
-
-> Any unlisted model still works with a generic name — open an issue to add yours.
-
-## Languages
-
-The UI is translated into:
-
-- 🇬🇧 English (`en`)
-- 🇧🇷 Português – Brasil (`pt-BR`)
-- 🇪🇸 Español (`es`)
-
-Home Assistant picks the language from your profile automatically. Contributions for more languages are welcome — copy `custom_components/xiaomi_miwifi/translations/en.json` to your locale code and translate the values.
 
 ## Development
 
