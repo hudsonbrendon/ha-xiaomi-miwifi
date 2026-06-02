@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented here.
 
+## [0.5.0]
+
+### Added
+
+- **Speed-test sensors**: WAN speed-test download and upload (Mbit/s) from the router's last on-device speed test.
+- **WAN DNS** diagnostic sensor listing the WAN-side DNS servers.
+- **Port forwarding rules** diagnostic sensor counting the active single-port forwards.
+- **DHCP lease time** diagnostic sensor (minutes).
+- **Timezone** diagnostic sensor reporting the router timezone.
+- **DMZ** and **DDNS** diagnostic binary sensors.
+- **Run speed test** button to trigger an on-device WAN speed test.
+- **Services**: `run_speed_test`, `add_port_forward`, `delete_port_forward`, `set_dmz`, `clear_dmz`, `set_ddns`.
+
+### Changed
+
+- Bumped the `python-xiaomi-miwifi` requirement to `0.5.0`.
+
 ## [0.4.0]
 
 ### Added
