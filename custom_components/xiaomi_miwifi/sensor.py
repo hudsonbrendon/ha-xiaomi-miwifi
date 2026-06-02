@@ -168,6 +168,13 @@ SENSOR_DESCRIPTIONS: tuple[MiWiFiSensorDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda s: s.lan_ports_active,
     ),
+    MiWiFiSensorDescription(
+        key="country_code",
+        translation_key="country_code",
+        icon="mdi:earth",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda s: s.country_code,
+    ),
 )
 
 

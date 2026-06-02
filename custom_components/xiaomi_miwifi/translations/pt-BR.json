@@ -47,7 +47,8 @@
       "mode": { "name": "Modo de operação" },
       "ethernet_ports": { "name": "Portas Ethernet conectadas" },
       "mesh_node_model": { "name": "Modelo" },
-      "mesh_node_ip": { "name": "Endereço IP" }
+      "mesh_node_ip": { "name": "Endereço IP" },
+      "country_code": { "name": "Código do país" }
     },
     "binary_sensor": {
       "wan_link": { "name": "Link WAN" },
@@ -65,7 +66,8 @@
     },
     "switch": {
       "wifi_5g": { "name": "Wi-Fi 5 GHz" },
-      "wifi_24g": { "name": "Wi-Fi 2,4 GHz" }
+      "wifi_24g": { "name": "Wi-Fi 2,4 GHz" },
+      "qos": { "name": "QoS" }
     },
     "button": {
       "reboot": { "name": "Reiniciar" }

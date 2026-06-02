@@ -17,6 +17,7 @@ from custom_components.xiaomi_miwifi.sensor import (
 )
 from custom_components.xiaomi_miwifi.switch import (
     RADIO_SWITCHES,
+    MiWiFiQosSwitch,
     MiWiFiRadioSwitch,
 )
 from custom_components.xiaomi_miwifi.update import MiWiFiFirmwareUpdate
@@ -44,6 +45,7 @@ def test_sensor_descriptions_cover_expected_keys():
         "firmware_version",
         "mode",
         "ethernet_ports",
+        "country_code",
     }
 
 
@@ -225,6 +227,23 @@ async def test_radio_switch_turn_off_raises_on_failure(hass):
     with pytest.raises(HomeAssistantError):
         await switch.async_turn_off()
     assert switch._attr_is_on is True
+
+
+def test_country_code_sensor():
+    by_key = {d.key: d for d in SENSOR_DESCRIPTIONS}
+    assert by_key["country_code"].value_fn(make_status(True)) == "CN"
+
+
+async def test_qos_switch_on_off():
+    coord = SimpleNamespace(
+        data=make_status(True), last_update_success=True,
+        client=AsyncMock(), async_request_refresh=AsyncMock(),
+    )
+    entry = SimpleNamespace(entry_id="e1", title="Casa")
+    sw = MiWiFiQosSwitch(coord, entry)
+    assert sw.is_on is True  # make_status qos_on == True
+    await sw.async_turn_off()
+    coord.client.async_set_qos.assert_awaited_once_with(False)
 
 
 async def test_mesh_node_sensor_reports_online_and_model(hass):
