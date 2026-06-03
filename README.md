@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/hudsonbrendon/ha-miwifi/main/custom_components/ha_miwifi/brand/logo%402x.png" alt="Mi WiFi" width="280">
 </p>
 
-<h1 align="center">Xiaomi MiWiFi for Home Assistant</h1>
+<h1 align="center">MiWiFi for Home Assistant</h1>
 
 <p align="center">
   <a href="https://github.com/hacs/integration"><img src="https://img.shields.io/badge/HACS-Custom-41BDF5.svg" alt="HACS Custom"></a>
