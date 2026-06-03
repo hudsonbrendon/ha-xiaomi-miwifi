@@ -63,3 +63,25 @@ async def test_correlation_noop_for_leaf_status(hass):
     ):
         async_correlate_and_discover(hass, leaf, status)
     assert flows == []
+
+
+async def test_correlate_and_discover_never_raises(hass):
+    """A failure inside discovery/correlation must be swallowed (non-fatal),
+    so it can never break async_setup_entry (which would roll back entities)."""
+    from unittest.mock import patch
+
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+    from custom_components.xiaomi_miwifi.const import DOMAIN
+    from custom_components.xiaomi_miwifi.discovery import async_correlate_and_discover
+    from tests.conftest import make_status
+
+    entry = MockConfigEntry(domain=DOMAIN, data={CONF_HOST: "192.168.31.1"},
+                            unique_id="28:d1:27:9f:4c:14")
+    entry.add_to_hass(hass)
+    with patch(
+        "custom_components.xiaomi_miwifi.discovery.discovery_flow.async_create_flow",
+        side_effect=TypeError("simulated HA API change"),
+    ):
+        # must NOT raise despite the inner TypeError
+        async_correlate_and_discover(hass, entry, make_status(True))

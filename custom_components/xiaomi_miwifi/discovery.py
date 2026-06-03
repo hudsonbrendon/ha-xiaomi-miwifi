@@ -3,8 +3,13 @@
 Only the gateway (router mode 0) knows the mesh topology, so it drives
 everything: for each leaf it either links the already-configured device via
 `via_device`, or fires an integration_discovery flow so the user can add it.
+
+Correlation/discovery is best-effort and is wrapped so it can NEVER break
+entry setup — any failure is logged and swallowed.
 """
 from __future__ import annotations
+
+import logging
 
 from homeassistant.config_entries import SOURCE_INTEGRATION_DISCOVERY, ConfigEntry
 from homeassistant.const import CONF_HOST
@@ -15,6 +20,8 @@ from homeassistant.helpers import discovery_flow
 from xiaomi_miwifi import MiWiFiStatus
 
 from .const import DOMAIN
+
+_LOGGER = logging.getLogger(__name__)
 
 
 @callback
@@ -36,7 +43,23 @@ def _router_device(hass: HomeAssistant, entry_id: str) -> dr.DeviceEntry | None:
 def async_correlate_and_discover(
     hass: HomeAssistant, entry: ConfigEntry, status: MiWiFiStatus
 ) -> None:
-    """Driven from the gateway entry on every successful refresh."""
+    """Driven from the gateway entry on every successful refresh.
+
+    Best-effort: any error is logged and never propagated, so a mesh/discovery
+    problem can't take the integration down.
+    """
+    try:
+        _correlate_and_discover(hass, entry, status)
+    except Exception:  # noqa: BLE001 - discovery must never break setup
+        _LOGGER.warning(
+            "MiWiFi mesh correlation/discovery failed (non-fatal)", exc_info=True
+        )
+
+
+@callback
+def _correlate_and_discover(
+    hass: HomeAssistant, entry: ConfigEntry, status: MiWiFiStatus
+) -> None:
     if not status.online or status.mode != 0:
         return  # only the gateway drives the mesh
     reg = dr.async_get(hass)

@@ -1,6 +1,8 @@
 """The Xiaomi MiWiFi integration."""
 from __future__ import annotations
 
+import logging
+
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, Platform
@@ -27,6 +29,8 @@ from .const import (
     DOMAIN,
 )
 from .coordinator import XiaomiMiWiFiCoordinator
+
+_LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
@@ -243,9 +247,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if entry.unique_id is None or "." in (entry.unique_id or ""):
         mac = coordinator.data.mac
         if mac:
-            hass.config_entries.async_update_entry(
-                entry, unique_id=format_mac(mac)
-            )
+            try:
+                hass.config_entries.async_update_entry(
+                    entry, unique_id=format_mac(mac)
+                )
+            except Exception:  # noqa: BLE001 - migration must never break setup
+                _LOGGER.warning(
+                    "MiWiFi unique_id migration to MAC failed", exc_info=True
+                )
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
     _register_services(hass)

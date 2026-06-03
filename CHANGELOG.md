@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here.
 
+## [0.7.1]
+
+### Fixed
+- Mesh correlation/discovery and the MAC unique_id migration are now best-effort and fully isolated from entry setup: a failure in either (e.g. a Home Assistant API change between versions) is logged and swallowed instead of raising and rolling back all entities. This restores setups that ended up with zero entities after upgrading to 0.7.0 on newer Home Assistant releases.
+
 ## [0.7.0]
 
 ### Added
