@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here.
 
+## [0.8.2]
+
+### Fixed
+- Coordinator crashed on every refresh with `AttributeError: 'NoneType' object has no attribute 'update_available'` because the repairs check read `coordinator.data` (still `None` while the first update runs) instead of the freshly fetched status. It now receives the new status directly and no-ops on `None`, so entities load correctly. This was the root cause of setups ending up with no/unavailable entities.
+
 ## [0.8.1]
 
 ### Changed

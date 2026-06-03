@@ -109,5 +109,5 @@ class XiaomiMiWiFiCoordinator(DataUpdateCoordinator[MiWiFiStatus]):
             if self.entry_id:
                 from .repairs import async_check_issues
 
-                async_check_issues(self.hass, self.entry_id, self)
+                async_check_issues(self.hass, self.entry_id, status)
         return status

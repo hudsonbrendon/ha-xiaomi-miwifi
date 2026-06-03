@@ -3,15 +3,23 @@ from __future__ import annotations
 
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import issue_registry as ir
-from xiaomi_miwifi import SUPPORTED_ROUTERS
+from xiaomi_miwifi import SUPPORTED_ROUTERS, MiWiFiStatus
 
 from .const import DOMAIN
 
 
 @callback
-def async_check_issues(hass: HomeAssistant, entry_id: str, coordinator) -> None:
-    """Create or clear repair issues based on the latest router status."""
-    data = coordinator.data
+def async_check_issues(
+    hass: HomeAssistant, entry_id: str, data: MiWiFiStatus | None
+) -> None:
+    """Create or clear repair issues based on the freshly fetched status.
+
+    ``data`` is the status just produced by the coordinator update — it must be
+    passed in rather than read from ``coordinator.data``, which is still the
+    previous value (None on the first refresh) while the update is running.
+    """
+    if data is None:
+        return
 
     fw_id = f"firmware_update_available_{entry_id}"
     if data.update_available:
