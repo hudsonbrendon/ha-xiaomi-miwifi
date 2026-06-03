@@ -3,9 +3,9 @@ from unittest.mock import MagicMock
 
 from homeassistant.components.device_tracker import SourceType
 
-from custom_components.xiaomi_miwifi import device_tracker
-from custom_components.xiaomi_miwifi.const import DOMAIN
-from custom_components.xiaomi_miwifi.device_tracker import (
+from custom_components.ha_miwifi import device_tracker
+from custom_components.ha_miwifi.const import DOMAIN
+from custom_components.ha_miwifi.device_tracker import (
     MiWiFiDeviceTracker,
     async_setup_entry,
 )
@@ -131,7 +131,7 @@ def test_async_setup_entry_module_callable():
 def test_tracker_signal_quality_and_last_seen():
     from xiaomi_miwifi import ClientDevice
 
-    from custom_components.xiaomi_miwifi.device_tracker import (
+    from custom_components.ha_miwifi.device_tracker import (
         MiWiFiDeviceTracker,
     )
 

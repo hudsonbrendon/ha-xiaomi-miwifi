@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 import pytest
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 
-from custom_components.xiaomi_miwifi import (
+from custom_components.ha_miwifi import (
     DOMAIN,
     SERVICE_ADD_PORT_FORWARD,
     SERVICE_BLOCK_DEVICE,

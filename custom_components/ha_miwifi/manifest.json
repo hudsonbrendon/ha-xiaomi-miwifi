@@ -1,5 +1,5 @@
 {
-  "domain": "xiaomi_miwifi",
+  "domain": "ha_miwifi",
   "name": "Xiaomi MiWiFi",
   "codeowners": ["@hudsonbrendon"],
   "config_flow": true,
@@ -9,10 +9,10 @@
     { "hostname": "redmi*" },
     { "hostname": "*xiaomi-router*" }
   ],
-  "documentation": "https://github.com/hudsonbrendon/ha-xiaomi-miwifi",
+  "documentation": "https://github.com/hudsonbrendon/ha-miwifi",
   "integration_type": "hub",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/hudsonbrendon/ha-xiaomi-miwifi/issues",
+  "issue_tracker": "https://github.com/hudsonbrendon/ha-miwifi/issues",
   "requirements": ["python-xiaomi-miwifi==0.6.0"],
-  "version": "0.7.1"
+  "version": "0.8.0"
 }

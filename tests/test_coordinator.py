@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock
 from homeassistant.core import HomeAssistant
 from xiaomi_miwifi import ClientDevice
 
-from custom_components.xiaomi_miwifi.coordinator import (
+from custom_components.ha_miwifi.coordinator import (
     XiaomiMiWiFiCoordinator,
 )
 from tests.conftest import make_status
@@ -20,7 +20,7 @@ async def test_coordinator_returns_status(hass: HomeAssistant):
 
 
 async def test_coordinator_loads_available_channels(hass: HomeAssistant):
-    from custom_components.xiaomi_miwifi.coordinator import (
+    from custom_components.ha_miwifi.coordinator import (
         XiaomiMiWiFiCoordinator,
     )
     from tests.conftest import make_status
@@ -64,7 +64,7 @@ def _client_dev(mac, name="d", online=True):
 
 
 async def test_coordinator_fires_connect_and_new_device_events(hass):
-    from custom_components.xiaomi_miwifi.const import (
+    from custom_components.ha_miwifi.const import (
         EVENT_DEVICE_CONNECTED,
         EVENT_NEW_DEVICE,
     )
@@ -88,7 +88,7 @@ async def test_coordinator_fires_connect_and_new_device_events(hass):
 
 
 async def test_coordinator_fires_disconnect_event(hass):
-    from custom_components.xiaomi_miwifi.const import EVENT_DEVICE_DISCONNECTED
+    from custom_components.ha_miwifi.const import EVENT_DEVICE_DISCONNECTED
 
     seen = []
     hass.bus.async_listen(EVENT_DEVICE_DISCONNECTED, lambda e: seen.append(e.data))

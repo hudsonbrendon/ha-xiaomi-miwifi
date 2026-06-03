@@ -3,8 +3,8 @@ from unittest.mock import patch
 from homeassistant.const import CONF_HOST
 from homeassistant.helpers import device_registry as dr
 
-from custom_components.xiaomi_miwifi.const import DOMAIN
-from custom_components.xiaomi_miwifi.discovery import async_correlate_and_discover
+from custom_components.ha_miwifi.const import DOMAIN
+from custom_components.ha_miwifi.discovery import async_correlate_and_discover
 from tests.conftest import make_status
 
 
@@ -36,7 +36,7 @@ async def test_correlation_links_configured_leaf(hass):
     status = make_status(True)  # mode 0, mesh_nodes incl. 192.168.31.215
     flows = []
     with patch(
-        "custom_components.xiaomi_miwifi.discovery.discovery_flow.async_create_flow",
+        "custom_components.ha_miwifi.discovery.discovery_flow.async_create_flow",
         side_effect=lambda *a, **k: flows.append(k.get("data")),
     ):
         async_correlate_and_discover(hass, gw, status)
@@ -58,7 +58,7 @@ async def test_correlation_noop_for_leaf_status(hass):
     status = replace(make_status(True), mode=3)  # not a gateway
     flows = []
     with patch(
-        "custom_components.xiaomi_miwifi.discovery.discovery_flow.async_create_flow",
+        "custom_components.ha_miwifi.discovery.discovery_flow.async_create_flow",
         side_effect=lambda *a, **k: flows.append(1),
     ):
         async_correlate_and_discover(hass, leaf, status)
@@ -72,15 +72,15 @@ async def test_correlate_and_discover_never_raises(hass):
 
     from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-    from custom_components.xiaomi_miwifi.const import DOMAIN
-    from custom_components.xiaomi_miwifi.discovery import async_correlate_and_discover
+    from custom_components.ha_miwifi.const import DOMAIN
+    from custom_components.ha_miwifi.discovery import async_correlate_and_discover
     from tests.conftest import make_status
 
     entry = MockConfigEntry(domain=DOMAIN, data={CONF_HOST: "192.168.31.1"},
                             unique_id="28:d1:27:9f:4c:14")
     entry.add_to_hass(hass)
     with patch(
-        "custom_components.xiaomi_miwifi.discovery.discovery_flow.async_create_flow",
+        "custom_components.ha_miwifi.discovery.discovery_flow.async_create_flow",
         side_effect=TypeError("simulated HA API change"),
     ):
         # must NOT raise despite the inner TypeError

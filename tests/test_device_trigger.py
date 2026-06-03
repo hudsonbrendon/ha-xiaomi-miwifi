@@ -1,4 +1,4 @@
-from custom_components.xiaomi_miwifi.device_trigger import (
+from custom_components.ha_miwifi.device_trigger import (
     TRIGGER_TYPES,
     async_get_triggers,
 )
@@ -17,6 +17,6 @@ async def test_async_get_triggers_lists_all_types(hass):
     types = {t["type"] for t in triggers}
     assert types == set(TRIGGER_TYPES)
     for t in triggers:
-        assert t["domain"] == "xiaomi_miwifi"
+        assert t["domain"] == "ha_miwifi"
         assert t["device_id"] == "dev123"
         assert t["platform"] == "device"

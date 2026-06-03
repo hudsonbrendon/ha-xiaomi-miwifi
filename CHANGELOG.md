@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here.
 
+## [0.8.0]
+
+### Breaking changes
+
+- **Renamed the integration domain to `ha_miwifi`** (was `xiaomi_miwifi`) and the repository to `ha-miwifi`. Because Home Assistant ties config entries to the domain, existing entries must be removed and re-added after upgrading; entity IDs change accordingly. The bus events are now `ha_miwifi_device_connected`/`_disconnected`/`_new_device`. The companion library `python-xiaomi-miwifi` is unchanged.
+
 ## [0.7.1]
 
 ### Fixed
@@ -38,7 +44,7 @@ All notable changes to this project are documented here.
 
 ### Added
 
-- **Device events**: the coordinator fires `xiaomi_miwifi_device_connected`, `xiaomi_miwifi_device_disconnected`, and `xiaomi_miwifi_new_device` bus events as devices join, leave, or are seen for the first time.
+- **Device events**: the coordinator fires `ha_miwifi_device_connected`, `ha_miwifi_device_disconnected`, and `ha_miwifi_new_device` bus events as devices join, leave, or are seen for the first time.
 - **Device automation triggers**: "A device connected", "A device disconnected", and "A new device joined" triggers for use in automations.
 - **System Health** panel reporting router count, reachability, firmware version, connected devices, and mesh nodes.
 - **Repairs**: informational issues for an available firmware update and for an unsupported router model.

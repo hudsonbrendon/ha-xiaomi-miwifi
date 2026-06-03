@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import issue_registry as ir
-
 from xiaomi_miwifi import SUPPORTED_ROUTERS
 
 from .const import DOMAIN

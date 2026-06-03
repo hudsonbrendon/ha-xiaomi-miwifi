@@ -4,7 +4,7 @@ add_dhcp_reservation:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     mac:
       required: true
       example: "AA:BB:CC:DD:EE:FF"
@@ -27,7 +27,7 @@ remove_dhcp_reservation:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     mac:
       required: true
       example: "AA:BB:CC:DD:EE:FF"
@@ -40,7 +40,7 @@ block_device:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     mac:
       required: true
       example: "AA:BB:CC:DD:EE:FF"
@@ -53,7 +53,7 @@ unblock_device:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     mac:
       required: true
       example: "AA:BB:CC:DD:EE:FF"
@@ -66,7 +66,7 @@ luci_request:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     path:
       required: true
       example: "api/misystem/router_info"
@@ -79,7 +79,7 @@ run_speed_test:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
 
 add_port_forward:
   fields:
@@ -87,7 +87,7 @@ add_port_forward:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     ip:
       required: true
       example: "192.168.31.50"
@@ -129,7 +129,7 @@ delete_port_forward:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     source_port:
       required: true
       example: 8080
@@ -145,7 +145,7 @@ set_dmz:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     ip:
       required: true
       example: "192.168.31.50"
@@ -158,7 +158,7 @@ clear_dmz:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
 
 set_ddns:
   fields:
@@ -166,7 +166,7 @@ set_ddns:
       required: true
       selector:
         config_entry:
-          integration: xiaomi_miwifi
+          integration: ha_miwifi
     enabled:
       required: true
       example: true

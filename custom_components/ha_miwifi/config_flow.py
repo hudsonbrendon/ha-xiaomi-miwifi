@@ -14,7 +14,6 @@ from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import format_mac
-
 from xiaomi_miwifi import MiWiFiAuthError, MiWiFiClient, MiWiFiConnectionError
 
 from .const import (

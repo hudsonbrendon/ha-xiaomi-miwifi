@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
-from custom_components.xiaomi_miwifi.select import (
+from custom_components.ha_miwifi.select import (
     MiWiFiChannelSelect,
     MiWiFiTxPowerSelect,
 )

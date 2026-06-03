@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/hudsonbrendon/ha-xiaomi-miwifi/main/custom_components/xiaomi_miwifi/brand/logo%402x.png" alt="Mi WiFi" width="280">
+  <img src="https://raw.githubusercontent.com/hudsonbrendon/ha-miwifi/main/custom_components/ha_miwifi/brand/logo%402x.png" alt="Mi WiFi" width="280">
 </p>
 
 <h1 align="center">Xiaomi MiWiFi for Home Assistant</h1>
 
 <p align="center">
   <a href="https://github.com/hacs/integration"><img src="https://img.shields.io/badge/HACS-Custom-41BDF5.svg" alt="HACS Custom"></a>
-  <a href="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/tests.yml"><img src="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
-  <a href="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/validate.yml"><img src="https://github.com/hudsonbrendon/ha-xiaomi-miwifi/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
+  <a href="https://github.com/hudsonbrendon/ha-miwifi/actions/workflows/tests.yml"><img src="https://github.com/hudsonbrendon/ha-miwifi/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="https://github.com/hudsonbrendon/ha-miwifi/actions/workflows/validate.yml"><img src="https://github.com/hudsonbrendon/ha-miwifi/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
@@ -34,7 +34,7 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 
 ## Installation (HACS)
 
-1. HACS → ⋮ → **Custom repositories** → add `https://github.com/hudsonbrendon/ha-xiaomi-miwifi`, category **Integration**.
+1. HACS → ⋮ → **Custom repositories** → add `https://github.com/hudsonbrendon/ha-miwifi`, category **Integration**.
 2. Install **Xiaomi MiWiFi**, restart Home Assistant.
 3. **Settings → Devices & Services → Add Integration → Xiaomi MiWiFi**.
 4. Enter the router host (e.g. `192.168.31.1`) and admin password.
@@ -79,17 +79,17 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 
 ## Services
 
-- `xiaomi_miwifi.add_dhcp_reservation` — reserve an IP for a MAC.
-- `xiaomi_miwifi.remove_dhcp_reservation` — remove a reservation.
-- `xiaomi_miwifi.block_device` — block a device from the network by MAC.
-- `xiaomi_miwifi.unblock_device` — unblock a previously blocked device by MAC.
-- `xiaomi_miwifi.luci_request` — perform a read-only GET to any MiWiFi LuCI API path and return the JSON response (e.g. `api/misystem/router_info`).
-- `xiaomi_miwifi.run_speed_test` — trigger an on-device WAN speed test (briefly saturates the link).
-- `xiaomi_miwifi.add_port_forward` — add a single-port forwarding rule (ip, name, proto, source_port, dest_port).
-- `xiaomi_miwifi.delete_port_forward` — delete a port forwarding rule by its external (source) port.
-- `xiaomi_miwifi.set_dmz` — forward all unmatched WAN traffic to a single LAN host.
-- `xiaomi_miwifi.clear_dmz` — disable DMZ forwarding.
-- `xiaomi_miwifi.set_ddns` — enable or disable dynamic DNS.
+- `ha_miwifi.add_dhcp_reservation` — reserve an IP for a MAC.
+- `ha_miwifi.remove_dhcp_reservation` — remove a reservation.
+- `ha_miwifi.block_device` — block a device from the network by MAC.
+- `ha_miwifi.unblock_device` — unblock a previously blocked device by MAC.
+- `ha_miwifi.luci_request` — perform a read-only GET to any MiWiFi LuCI API path and return the JSON response (e.g. `api/misystem/router_info`).
+- `ha_miwifi.run_speed_test` — trigger an on-device WAN speed test (briefly saturates the link).
+- `ha_miwifi.add_port_forward` — add a single-port forwarding rule (ip, name, proto, source_port, dest_port).
+- `ha_miwifi.delete_port_forward` — delete a port forwarding rule by its external (source) port.
+- `ha_miwifi.set_dmz` — forward all unmatched WAN traffic to a single LAN host.
+- `ha_miwifi.clear_dmz` — disable DMZ forwarding.
+- `ha_miwifi.set_ddns` — enable or disable dynamic DNS.
 
 ## Events & automation triggers
 
@@ -97,9 +97,9 @@ The integration fires bus events as devices come and go, and exposes matching de
 
 | Event | Trigger | Payload |
 |-------|---------|---------|
-| `xiaomi_miwifi_device_connected` | A device connected | `mac`, `name`, `ip` |
-| `xiaomi_miwifi_device_disconnected` | A device disconnected | `mac` |
-| `xiaomi_miwifi_new_device` | A new device joined | `mac`, `name`, `ip` |
+| `ha_miwifi_device_connected` | A device connected | `mac`, `name`, `ip` |
+| `ha_miwifi_device_disconnected` | A device disconnected | `mac` |
+| `ha_miwifi_new_device` | A new device joined | `mac`, `name`, `ip` |
 
 ## Multiple routers & mesh discovery
 

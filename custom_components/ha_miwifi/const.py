@@ -1,7 +1,7 @@
 """Constants for the Xiaomi MiWiFi integration."""
 from __future__ import annotations
 
-DOMAIN = "xiaomi_miwifi"
+DOMAIN = "ha_miwifi"
 
 CONF_PASSWORD = "password"
 CONF_SCAN_INTERVAL = "scan_interval"
@@ -16,6 +16,6 @@ DEFAULT_CONSIDER_HOME = 180
 
 MANUFACTURER = "Xiaomi"
 
-EVENT_DEVICE_CONNECTED = "xiaomi_miwifi_device_connected"
-EVENT_DEVICE_DISCONNECTED = "xiaomi_miwifi_device_disconnected"
-EVENT_NEW_DEVICE = "xiaomi_miwifi_new_device"
+EVENT_DEVICE_CONNECTED = "ha_miwifi_device_connected"
+EVENT_DEVICE_DISCONNECTED = "ha_miwifi_device_disconnected"
+EVENT_NEW_DEVICE = "ha_miwifi_new_device"

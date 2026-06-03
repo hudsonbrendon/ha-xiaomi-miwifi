@@ -16,7 +16,6 @@ from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import discovery_flow
-
 from xiaomi_miwifi import MiWiFiStatus
 
 from .const import DOMAIN

@@ -4,20 +4,20 @@ from unittest.mock import AsyncMock
 import pytest
 from homeassistant.exceptions import HomeAssistantError
 
-from custom_components.xiaomi_miwifi.binary_sensor import (
+from custom_components.ha_miwifi.binary_sensor import (
     BINARY_SENSOR_DESCRIPTIONS,
 )
-from custom_components.xiaomi_miwifi.button import MiWiFiRebootButton
-from custom_components.xiaomi_miwifi.sensor import (
+from custom_components.ha_miwifi.button import MiWiFiRebootButton
+from custom_components.ha_miwifi.sensor import (
     SENSOR_DESCRIPTIONS,
     MiWiFiUptimeSensor,
 )
-from custom_components.xiaomi_miwifi.switch import (
+from custom_components.ha_miwifi.switch import (
     RADIO_SWITCHES,
     MiWiFiQosSwitch,
     MiWiFiRadioSwitch,
 )
-from custom_components.xiaomi_miwifi.update import MiWiFiFirmwareUpdate
+from custom_components.ha_miwifi.update import MiWiFiFirmwareUpdate
 from tests.conftest import make_status
 
 
@@ -102,7 +102,7 @@ def test_uptime_sensor_reports_last_boot_timestamp():
 def test_uptime_sensor_is_stable_across_polls(monkeypatch):
     from datetime import UTC, datetime, timedelta
 
-    from custom_components.xiaomi_miwifi import sensor as sensor_module
+    from custom_components.ha_miwifi import sensor as sensor_module
 
     status = make_status(True)
     coordinator = SimpleNamespace(
@@ -229,7 +229,7 @@ def test_v05_sensor_value_fns():
 
 
 def test_v05_binary_sensor_descriptions():
-    from custom_components.xiaomi_miwifi.binary_sensor import BINARY_SENSOR_DESCRIPTIONS
+    from custom_components.ha_miwifi.binary_sensor import BINARY_SENSOR_DESCRIPTIONS
     by_key = {d.key: d for d in BINARY_SENSOR_DESCRIPTIONS}
     s = make_status(True)
     assert by_key["dmz"].value_fn(s) is True
@@ -242,7 +242,7 @@ def test_country_code_sensor():
 
 
 async def test_speed_test_button_calls_client():
-    from custom_components.xiaomi_miwifi.button import MiWiFiSpeedTestButton
+    from custom_components.ha_miwifi.button import MiWiFiSpeedTestButton
 
     coord = SimpleNamespace(
         data=make_status(True), last_update_success=True,

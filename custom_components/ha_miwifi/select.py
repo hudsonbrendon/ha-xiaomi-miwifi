@@ -11,7 +11,6 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-
 from xiaomi_miwifi import TXPWR_OPTIONS, WIFI_INDEX_5G, WIFI_INDEX_24G
 
 from .const import DOMAIN
