@@ -1,4 +1,4 @@
-"""Device automation triggers for Xiaomi MiWiFi."""
+"""Device automation triggers for MiWiFi."""
 from __future__ import annotations
 
 import voluptuous as vol
@@ -31,7 +31,7 @@ TRIGGER_SCHEMA = DEVICE_TRIGGER_BASE_SCHEMA.extend(
 async def async_get_triggers(
     hass: HomeAssistant, device_id: str
 ) -> list[dict]:
-    """List device triggers for a Xiaomi MiWiFi device."""
+    """List device triggers for a MiWiFi device."""
     return [
         {
             CONF_PLATFORM: "device",

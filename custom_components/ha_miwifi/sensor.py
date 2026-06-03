@@ -1,4 +1,4 @@
-"""Sensor platform for the Xiaomi MiWiFi integration."""
+"""Sensor platform for the MiWiFi integration."""
 from __future__ import annotations
 
 from collections.abc import Callable

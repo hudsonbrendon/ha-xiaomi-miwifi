@@ -1,4 +1,4 @@
-"""The Xiaomi MiWiFi integration."""
+"""The MiWiFi integration."""
 from __future__ import annotations
 
 import logging
@@ -223,7 +223,7 @@ def _register_services(hass: HomeAssistant) -> None:
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Xiaomi MiWiFi from a config entry."""
+    """Set up MiWiFi from a config entry."""
     session = async_get_clientsession(hass)
     client = MiWiFiClient(
         entry.data[CONF_HOST],

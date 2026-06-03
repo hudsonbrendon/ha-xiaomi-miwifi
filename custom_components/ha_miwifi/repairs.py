@@ -1,4 +1,4 @@
-"""Repair issues for the Xiaomi MiWiFi integration."""
+"""Repair issues for the MiWiFi integration."""
 from __future__ import annotations
 
 from homeassistant.core import HomeAssistant, callback

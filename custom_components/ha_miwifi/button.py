@@ -1,4 +1,4 @@
-"""Reboot button for the Xiaomi MiWiFi integration (disruptive, exposed)."""
+"""Reboot button for the MiWiFi integration (disruptive, exposed)."""
 from __future__ import annotations
 
 from homeassistant.components.button import ButtonDeviceClass, ButtonEntity

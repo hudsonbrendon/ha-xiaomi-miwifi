@@ -1,4 +1,4 @@
-"""Radio on/off switches for the Xiaomi MiWiFi integration.
+"""Radio on/off switches for the MiWiFi integration.
 
 These toggle physical radios — disruptive by design. Exposed per the
 integration's full-control goal; never exercised against the live network

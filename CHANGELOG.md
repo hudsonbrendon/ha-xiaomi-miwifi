@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here.
 
+## [0.8.1]
+
+### Changed
+- Renamed the integration display name from "Xiaomi MiWiFi" to "MiWiFi" across the UI (config/reauth/reconfigure/discovery titles, default name, repair messages) and docs. No domain or functional change.
+
 ## [0.8.0]
 
 ### Breaking changes

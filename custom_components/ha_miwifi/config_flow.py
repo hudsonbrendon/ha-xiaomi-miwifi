@@ -1,4 +1,4 @@
-"""Config flow for the Xiaomi MiWiFi integration."""
+"""Config flow for the MiWiFi integration."""
 from __future__ import annotations
 
 from typing import Any
@@ -39,7 +39,7 @@ USER_SCHEMA = vol.Schema(
 
 
 class XiaomiMiWiFiConfigFlow(ConfigFlow, domain=DOMAIN):
-    """Handle the Xiaomi MiWiFi config flow."""
+    """Handle the MiWiFi config flow."""
 
     VERSION = 1
 

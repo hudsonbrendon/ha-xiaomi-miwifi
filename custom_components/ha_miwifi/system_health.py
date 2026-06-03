@@ -1,4 +1,4 @@
-"""System Health for Xiaomi MiWiFi."""
+"""System Health for MiWiFi."""
 from __future__ import annotations
 
 from homeassistant.components import system_health

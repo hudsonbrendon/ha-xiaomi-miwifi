@@ -35,8 +35,8 @@ Monitor and control **Xiaomi / MiWiFi routers** in Home Assistant over the local
 ## Installation (HACS)
 
 1. HACS → ⋮ → **Custom repositories** → add `https://github.com/hudsonbrendon/ha-miwifi`, category **Integration**.
-2. Install **Xiaomi MiWiFi**, restart Home Assistant.
-3. **Settings → Devices & Services → Add Integration → Xiaomi MiWiFi**.
+2. Install **MiWiFi**, restart Home Assistant.
+3. **Settings → Devices & Services → Add Integration → MiWiFi**.
 4. Enter the router host (e.g. `192.168.31.1`) and admin password.
 
 ## Entities

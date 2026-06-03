@@ -1,4 +1,4 @@
-"""DataUpdateCoordinator for the Xiaomi MiWiFi integration."""
+"""DataUpdateCoordinator for the MiWiFi integration."""
 from __future__ import annotations
 
 import logging

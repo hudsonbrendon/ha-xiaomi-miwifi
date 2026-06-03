@@ -1,4 +1,4 @@
-"""Update platform for the Xiaomi MiWiFi integration (info-only firmware)."""
+"""Update platform for the MiWiFi integration (info-only firmware)."""
 from __future__ import annotations
 
 from homeassistant.components.update import (

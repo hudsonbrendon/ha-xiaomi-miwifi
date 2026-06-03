@@ -1,4 +1,4 @@
-"""Mesh correlation and peer discovery for Xiaomi MiWiFi.
+"""Mesh correlation and peer discovery for MiWiFi.
 
 Only the gateway (router mode 0) knows the mesh topology, so it drives
 everything: for each leaf it either links the already-configured device via

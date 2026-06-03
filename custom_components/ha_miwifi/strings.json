@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Xiaomi MiWiFi",
+        "title": "MiWiFi",
         "data": {
           "name": "Name",
           "host": "Host / IP",
@@ -10,21 +10,21 @@
         }
       },
       "reauth_confirm": {
-        "title": "Re-authenticate Xiaomi MiWiFi",
+        "title": "Re-authenticate MiWiFi",
         "description": "The router rejected the stored password. Enter the current admin password.",
         "data": {
           "password": "Router admin password"
         }
       },
       "reconfigure": {
-        "title": "Reconfigure Xiaomi MiWiFi",
+        "title": "Reconfigure MiWiFi",
         "data": {
           "host": "Host / IP",
           "password": "Router admin password"
         }
       },
       "discovery_confirm": {
-        "title": "Xiaomi MiWiFi router found",
+        "title": "MiWiFi router found",
         "description": "Add the Xiaomi router discovered at {host}?",
         "data": {
           "password": "Router admin password"
@@ -127,7 +127,7 @@
   "issues": {
     "firmware_update_available": {
       "title": "Router firmware update available",
-      "description": "A new firmware version ({version}) is available for your Xiaomi MiWiFi router. Update it from the router's web interface or the Mi WiFi app."
+      "description": "A new firmware version ({version}) is available for your MiWiFi router. Update it from the router's web interface or the Mi WiFi app."
     },
     "unsupported_router": {
       "title": "Unsupported router model",

@@ -1,4 +1,4 @@
-"""Select platform for the Xiaomi MiWiFi integration (channels, tx power).
+"""Select platform for the MiWiFi integration (channels, tx power).
 
 These write WiFi configuration (set_wifi) and RESTART the affected radio —
 disruptive by design. Exposed for completeness; never exercised against a

@@ -1,4 +1,4 @@
-"""Diagnostics for the Xiaomi MiWiFi integration."""
+"""Diagnostics for the MiWiFi integration."""
 from __future__ import annotations
 
 from dataclasses import asdict

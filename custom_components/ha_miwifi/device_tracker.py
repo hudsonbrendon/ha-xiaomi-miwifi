@@ -1,4 +1,4 @@
-"""Device tracker platform for the Xiaomi MiWiFi integration.
+"""Device tracker platform for the MiWiFi integration.
 
 Tracks every client that has ever been seen on the router. Once a MAC has
 been observed it keeps its tracker forever: when the device drops off the
